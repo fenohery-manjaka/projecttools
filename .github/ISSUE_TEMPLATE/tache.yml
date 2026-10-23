@@ -1,0 +1,60 @@
+name: Tâche
+description: Un ticket de développement, rédigé par le développeur expert
+labels: ["fonctionnalité"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Un ticket = un dossier de module. Lire `docs/architecture.md` et `docs/conventions.md` avant de commencer.
+  - type: textarea
+    id: contexte
+    attributes:
+      label: Contexte
+      description: Ce qu'il faut faire et pourquoi, en quelques lignes.
+    validations:
+      required: true
+  - type: input
+    id: reference
+    attributes:
+      label: Écran de référence
+      description: Où regarder dans le prototype.
+      placeholder: Prototype › Tâches › tiroir de détail
+    validations:
+      required: true
+  - type: textarea
+    id: fichiers
+    attributes:
+      label: Fichiers autorisés
+      description: "Un fichier par ligne : + ajouté, ~ modifié, − supprimé."
+      render: text
+      placeholder: |
+        + app/Modules/Tasks/Models/Subtask.php
+        ~ resources/js/pages/tasks/Show.vue
+    validations:
+      required: true
+  - type: textarea
+    id: base
+    attributes:
+      label: Base de données
+      description: Tables ou colonnes ajoutées / modifiées. « Aucune » si rien.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: criteres
+    attributes:
+      label: Critères d'acceptation
+      description: Vérifiables. Toujours inclure le refus d'accès (403) et les tests attendus.
+      value: |
+        - [ ]
+        - [ ] Un utilisateur sans la permission reçoit 403
+        - [ ] Tests feature ajoutés et `composer ci:check` vert
+    validations:
+      required: true
+  - type: textarea
+    id: hors-perimetre
+    attributes:
+      label: Hors périmètre
+      description: Ce qu'il ne faut pas faire dans ce ticket.
+    validations:
+      required: false

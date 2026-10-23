@@ -6,6 +6,19 @@ export type BreadcrumbItem = {
     href: NonNullable<InertiaLinkProps['href']>;
 };
 
+/**
+ * Sidebar group shared by HandleInertiaRequests, built from the enabled modules.
+ */
+export type ModuleNavigationGroup = {
+    key: string;
+    label: string;
+    items: {
+        title: string;
+        href: string;
+        icon: string;
+    }[];
+};
+
 export type NavItem = {
     title: string;
     href: NonNullable<InertiaLinkProps['href']>;

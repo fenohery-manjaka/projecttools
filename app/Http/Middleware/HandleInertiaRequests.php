@@ -2,11 +2,15 @@
 
 namespace App\Http\Middleware;
 
+use App\Modules\Core\ModuleRegistry;
+use App\Modules\Core\Navigation\NavigationGroup;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    public function __construct(private readonly ModuleRegistry $modules) {}
+
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -41,7 +45,42 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'navigation' => fn (): array => $this->navigation($request),
+            'can' => fn (): array => [
+                'administer' => (bool) $request->user()?->can('administer'),
+                'viewMembers' => (bool) $request->user()?->can('members.view'),
+            ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * Sidebar groups built from the enabled modules the user is allowed to see.
+     *
+     * @return list<array{key: string, label: string, items: list<array{title: string, href: string, icon: string}>}>
+     */
+    private function navigation(Request $request): array
+    {
+        $user = $request->user();
+
+        if ($user === null) {
+            return [];
+        }
+
+        $groups = [];
+
+        foreach ($this->modules->navigationFor($user) as $item) {
+            $groups[$item->group->value] ??= ['key' => $item->group->value, 'label' => $item->group->label(), 'items' => []];
+            $groups[$item->group->value]['items'][] = [
+                'title' => $item->title,
+                'href' => route($item->route, absolute: false),
+                'icon' => $item->icon,
+            ];
+        }
+
+        return array_values(array_filter(array_map(
+            fn (NavigationGroup $group): ?array => $groups[$group->value] ?? null,
+            NavigationGroup::cases(),
+        )));
     }
 }

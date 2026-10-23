@@ -1,0 +1,15 @@
+# The lead developer reviews every change to the core and to the application wiring.
+# Module folders (app/Modules/<Name>) stay open to the executor, under normal review.
+
+/app/Modules/Core/      @fenohery-manjaka
+/app/Providers/         @fenohery-manjaka
+/app/Http/Middleware/   @fenohery-manjaka
+/bootstrap/             @fenohery-manjaka
+/config/                @fenohery-manjaka
+/routes/                @fenohery-manjaka
+/database/seeders/      @fenohery-manjaka
+/.github/               @fenohery-manjaka
+/.ai/                   @fenohery-manjaka
+/docs/                  @fenohery-manjaka
+/composer.json          @fenohery-manjaka
+/package.json           @fenohery-manjaka
