@@ -20,10 +20,10 @@ const sidebarNavItems = computed<NavItem[]>(() => [
     { title: 'Profil', href: editProfile() },
     { title: 'Sécurité', href: editSecurity() },
     { title: 'Apparence', href: editAppearance() },
-    ...(page.props.can.viewMembers
+    ...(page.props.abilities.viewMembers
         ? [{ title: 'Membres', href: members() }]
         : []),
-    ...(page.props.can.administer
+    ...(page.props.abilities.administer
         ? [
               { title: 'Rôles et permissions', href: roles() },
               { title: 'Modules', href: modules() },

@@ -21,7 +21,7 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             navigation: ModuleNavigationGroup[];
-            can: {
+            abilities: {
                 administer: boolean;
                 viewMembers: boolean;
             };

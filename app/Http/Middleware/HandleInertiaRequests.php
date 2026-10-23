@@ -46,7 +46,8 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'navigation' => fn (): array => $this->navigation($request),
-            'can' => fn (): array => [
+            // Not named "can": pages share their own "can" prop, which would replace this one.
+            'abilities' => fn (): array => [
                 'administer' => (bool) $request->user()?->can('administer'),
                 'viewMembers' => (bool) $request->user()?->can('members.view'),
             ],

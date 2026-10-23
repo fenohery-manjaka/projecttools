@@ -3,9 +3,10 @@
 namespace Tests\Feature\Modules\Core;
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Modules\Core\Notifications\MemberInvited;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
 class MembersTest extends TestCase
@@ -23,7 +24,9 @@ class MembersTest extends TestCase
     {
         Notification::fake();
 
-        $this->actingAs($this->userWithRole('Administrateur'))
+        $inviter = $this->userWithRole('Administrateur');
+
+        $this->actingAs($inviter)
             ->post(route('settings.members.store'), ['name' => 'Tojo', 'email' => 'tojo@example.com', 'role' => 'Contributeur'])
             ->assertSessionHasNoErrors();
 
@@ -31,7 +34,42 @@ class MembersTest extends TestCase
 
         $this->assertTrue($member->hasRole('Contributeur'));
         $this->assertFalse($member->is_super_admin);
-        Notification::assertSentTo($member, ResetPassword::class);
+
+        Notification::assertSentTo($member, MemberInvited::class, function (MemberInvited $notification) use ($member, $inviter): bool {
+            $mail = $notification->toMail($member);
+
+            return $notification->invitedBy === $inviter->name
+                && $mail->subject === 'Invitation à rejoindre '.config('app.name')
+                && Password::broker()->tokenExists($member, $notification->token);
+        });
+    }
+
+    public function test_the_invitation_link_lets_the_member_choose_a_password(): void
+    {
+        Notification::fake();
+
+        $this->actingAs($this->userWithRole('Administrateur'))
+            ->post(route('settings.members.store'), ['name' => 'Tojo', 'email' => 'tojo@example.com', 'role' => 'Contributeur']);
+
+        $member = User::query()->where('email', 'tojo@example.com')->firstOrFail();
+        $token = '';
+        Notification::assertSentTo($member, MemberInvited::class, function (MemberInvited $notification) use (&$token): bool {
+            $token = $notification->token;
+
+            return true;
+        });
+
+        auth()->logout();
+
+        $this->post(route('password.update'), [
+            'token' => $token,
+            'email' => 'tojo@example.com',
+            'password' => 'nouveau-mot-de-passe',
+            'password_confirmation' => 'nouveau-mot-de-passe',
+        ])->assertSessionHasNoErrors();
+
+        $this->post(route('login'), ['email' => 'tojo@example.com', 'password' => 'nouveau-mot-de-passe']);
+        $this->assertAuthenticatedAs($member);
     }
 
     public function test_a_member_without_the_manage_permission_cannot_invite(): void

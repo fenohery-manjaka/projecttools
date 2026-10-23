@@ -40,7 +40,7 @@ const fieldClass =
             name="description"
             rows="3"
             :class="fieldClass"
-            :value="values.description ?? ''"
+            :default-value="values.description ?? ''"
         />
         <InputError :message="errors.description" />
     </div>
@@ -52,7 +52,7 @@ const fieldClass =
             name="objectives"
             rows="3"
             :class="fieldClass"
-            :value="values.objectives ?? ''"
+            :default-value="values.objectives ?? ''"
         />
         <InputError :message="errors.objectives" />
     </div>

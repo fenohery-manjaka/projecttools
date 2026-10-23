@@ -35,6 +35,8 @@ defineOptions({
     },
 });
 
+const confirm = (message: string) => window.confirm(message);
+
 function toggle(role: Role, permission: string, granted: boolean) {
     router.put(
         RolePermissionController.update.url(role.id),
@@ -92,6 +94,12 @@ function toggle(role: Role, permission: string, granted: boolean) {
                 <Form
                     v-bind="RoleController.destroy.form(role.id)"
                     :options="{ preserveScroll: true }"
+                    @before="
+                        () =>
+                            confirm(
+                                `Supprimer le rôle « ${role.name} » et ses permissions ?`,
+                            )
+                    "
                     v-slot="{ errors, processing }"
                 >
                     <Button
@@ -143,7 +151,9 @@ function toggle(role: Role, permission: string, granted: boolean) {
             <table class="w-full text-sm">
                 <thead class="bg-muted/50">
                     <tr>
-                        <th class="p-3 text-left font-medium">Permission</th>
+                        <th class="min-w-56 p-3 text-left font-medium">
+                            Permission
+                        </th>
                         <th
                             v-for="role in roles"
                             :key="role.id"

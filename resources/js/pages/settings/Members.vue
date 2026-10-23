@@ -179,6 +179,7 @@ function editable(member: Member): boolean {
                     :class="selectClass"
                     required
                 >
+                    <option value="" disabled selected>Choisir un rôle</option>
                     <option v-for="role in roles" :key="role" :value="role">
                         {{ role }}
                     </option>

@@ -33,6 +33,16 @@ class ProjectRequest extends FormRequest
     /**
      * @return array<string, string>
      */
+    public function messages(): array
+    {
+        return [
+            'ends_on.after_or_equal' => 'La date de fin doit être postérieure ou égale à la date de début.',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
     public function attributes(): array
     {
         return [

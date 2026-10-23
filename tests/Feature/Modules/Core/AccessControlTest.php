@@ -87,6 +87,16 @@ class AccessControlTest extends TestCase
         $this->assertSame(['Accueil', 'Projets'], $this->navigationTitles($this->get(route('dashboard'))));
     }
 
+    public function test_shared_abilities_survive_pages_that_send_their_own_can_prop(): void
+    {
+        $props = $this->actingAs(User::factory()->superAdmin()->create())
+            ->get(route('settings.members.index'))
+            ->viewData('page')['props'];
+
+        $this->assertSame(['administer' => true, 'viewMembers' => true], $props['abilities']);
+        $this->assertSame(['manage' => true], $props['can']);
+    }
+
     public function test_a_deactivated_member_is_signed_out(): void
     {
         $this->actingAs(User::factory()->deactivated()->create());

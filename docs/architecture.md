@@ -101,6 +101,10 @@ Il ne peut être ni modifié ni désactivé depuis l'écran Membres.
 
 Construit côté serveur dans [`HandleInertiaRequests`](../app/Http/Middleware/HandleInertiaRequests.php) à partir des modules actifs, filtré par les droits de l'utilisateur, groupé en Travail / Collaboration / Pilotage. Côté Vue, [`NavMain.vue`](../resources/js/components/NavMain.vue) l'affiche ; l'icône est un nom Lucide résolu par [`navigationIcons.ts`](../resources/js/lib/navigationIcons.ts) (y ajouter l'icône d'un nouveau module).
 
+### Données partagées avec toutes les pages
+
+`HandleInertiaRequests` envoie à chaque page `navigation` (le menu) et `abilities` (droits globaux utilisés par les menus : `administer`, `viewMembers`). Une page envoie ses propres droits dans une prop `can` (ex. `can.update`). **Ne jamais nommer une donnée partagée `can`** : la prop de la page la remplacerait.
+
 ## Données du socle
 
 | Table                                                                                      | Contenu                                                                                        |

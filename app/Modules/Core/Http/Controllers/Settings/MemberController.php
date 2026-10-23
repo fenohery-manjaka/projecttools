@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Modules\Core\Actions\RecordActivity;
 use App\Modules\Core\Http\Requests\Settings\StoreMemberRequest;
 use App\Modules\Core\Http\Requests\Settings\UpdateMemberRequest;
+use App\Modules\Core\Notifications\MemberInvited;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -53,9 +54,12 @@ class MemberController extends Controller
         $member->forceFill(['email_verified_at' => now()])->save();
         $member->assignRole($request->string('role')->value());
 
-        Password::broker()->sendResetLink(['email' => $member->email]);
+        /** @var User $inviter */
+        $inviter = $request->user();
 
-        $recordActivity->handle($request->user(), "a invité {$member->name}", $member);
+        $member->notify(new MemberInvited(Password::broker()->createToken($member), $inviter->name));
+
+        $recordActivity->handle($inviter, "a invité {$member->name}", $member);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => "Invitation envoyée à {$member->email}."]);
 
