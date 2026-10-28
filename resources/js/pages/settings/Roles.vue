@@ -58,7 +58,7 @@ function toggle(role: Role, permission: string, granted: boolean) {
             description="Créez, renommez ou supprimez les rôles attribués aux membres. Le super admin n’a pas de rôle : il passe tous les contrôles."
         />
 
-        <ul class="divide-y rounded-lg border">
+        <ul class="panel divide-y divide-border">
             <li
                 v-for="role in roles"
                 :key="role.id"
@@ -147,27 +147,25 @@ function toggle(role: Role, permission: string, granted: boolean) {
             description="Cochez ce que chaque rôle peut faire. Le changement s’applique immédiatement."
         />
 
-        <div class="overflow-x-auto rounded-lg border">
-            <table class="w-full text-sm">
-                <thead class="bg-muted/50">
+        <div class="panel overflow-x-auto">
+            <table class="data-table">
+                <thead>
                     <tr>
-                        <th class="min-w-56 p-3 text-left font-medium">
-                            Permission
-                        </th>
+                        <th class="min-w-56">Permission</th>
                         <th
                             v-for="role in roles"
                             :key="role.id"
-                            class="p-3 text-center font-medium"
+                            class="text-center!"
                         >
                             {{ role.name }}
                         </th>
                     </tr>
                 </thead>
                 <tbody v-for="group in groups" :key="group.key">
-                    <tr class="border-t bg-muted/20">
+                    <tr>
                         <th
                             :colspan="roles.length + 1"
-                            class="p-3 text-left font-semibold"
+                            class="bg-card! font-display text-sm! text-foreground!"
                         >
                             {{ group.name }}
                             <Badge
@@ -181,9 +179,8 @@ function toggle(role: Role, permission: string, granted: boolean) {
                     <tr
                         v-for="permission in group.permissions"
                         :key="permission.name"
-                        class="border-t"
                     >
-                        <td class="p-3">
+                        <td>
                             {{ permission.label }}
                             <span
                                 class="block font-mono text-xs text-muted-foreground"
@@ -193,7 +190,7 @@ function toggle(role: Role, permission: string, granted: boolean) {
                         <td
                             v-for="role in roles"
                             :key="role.id"
-                            class="p-3 text-center"
+                            class="text-center"
                         >
                             <Checkbox
                                 :model-value="

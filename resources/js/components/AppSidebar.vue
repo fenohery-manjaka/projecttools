@@ -19,11 +19,15 @@ const page = usePage();
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
-        <SidebarHeader>
+    <Sidebar collapsible="icon" variant="sidebar" class="border-r-border">
+        <SidebarHeader class="px-3 pt-[18px] pb-0">
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
+                    <SidebarMenuButton
+                        size="lg"
+                        as-child
+                        class="h-auto gap-2.5 px-2 py-0.5 hover:bg-transparent"
+                    >
                         <Link :href="dashboard()">
                             <AppLogo />
                         </Link>
@@ -32,11 +36,11 @@ const page = usePage();
             </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent>
+        <SidebarContent class="gap-3.5 px-3 pt-3.5">
             <NavMain :groups="page.props.navigation" />
         </SidebarContent>
 
-        <SidebarFooter>
+        <SidebarFooter class="mx-3 mb-3 border-t border-border px-0 pt-3">
             <NavUser />
         </SidebarFooter>
     </Sidebar>

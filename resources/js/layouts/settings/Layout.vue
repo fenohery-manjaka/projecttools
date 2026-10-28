@@ -42,8 +42,9 @@ const wide = computed(() =>
 </script>
 
 <template>
-    <div class="px-4 py-6">
+    <div>
         <Heading
+            class="mb-[22px]"
             title="Paramètres"
             description="Votre compte et, selon vos droits, l’équipe et la plateforme"
         />
@@ -59,8 +60,11 @@ const wide = computed(() =>
                         :key="toUrl(item.href)"
                         variant="ghost"
                         :class="[
-                            'w-full justify-start',
-                            { 'bg-muted': isCurrentOrParentUrl(item.href) },
+                            'h-9 w-full justify-start rounded-[9px] font-medium text-ink-2 hover:bg-sunk',
+                            {
+                                'bg-card font-semibold text-foreground shadow-soft hover:bg-card':
+                                    isCurrentOrParentUrl(item.href),
+                            },
                         ]"
                         as-child
                     >

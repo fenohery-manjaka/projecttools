@@ -1,12 +1,22 @@
 <script setup lang="ts">
-import { Form, Head, Link, router, usePage } from '@inertiajs/vue3';
+import {
+    Form,
+    Head,
+    Link,
+    router,
+    setLayoutProps,
+    usePage,
+} from '@inertiajs/vue3';
+import { watchEffect } from 'vue';
 import ProjectController from '@/actions/App/Modules/Projects/Http/Controllers/ProjectController';
 import ProjectMemberController from '@/actions/App/Modules/Projects/Http/Controllers/ProjectMemberController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
+import MemberAvatar from '@/components/MemberAvatar.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { edit } from '@/routes/projects';
+import { projectStatusTone } from '@/lib/tones';
+import { edit, index, show } from '@/routes/projects';
 
 type Project = {
     id: number;
@@ -28,6 +38,15 @@ const props = defineProps<{
 }>();
 
 const page = usePage();
+
+watchEffect(() => {
+    setLayoutProps({
+        breadcrumbs: [
+            { title: 'Projets', href: index() },
+            { title: props.project.name, href: show(props.project.id) },
+        ],
+    });
+});
 
 const formatDate = (date: string) =>
     new Date(`${date}T00:00`).toLocaleDateString('fr-FR', {
@@ -56,27 +75,34 @@ function removeMember(memberId: number) {
 <template>
     <Head :title="project.name" />
 
-    <div class="space-y-8 p-4">
-        <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="space-y-6">
+        <div class="flex flex-wrap items-end justify-between gap-4">
             <div class="flex items-center gap-4">
                 <span
-                    class="grid size-12 place-content-center rounded-xl text-lg font-semibold text-white"
+                    class="grid size-11 shrink-0 place-items-center rounded-xl font-display text-lg font-bold text-white"
                     :style="{ backgroundColor: project.color }"
                     aria-hidden="true"
                     >{{ project.name[0] }}</span
                 >
-                <div>
-                    <h1 class="text-2xl font-semibold tracking-tight">
+                <div class="space-y-1.5">
+                    <h1 class="text-[30px] leading-[1.15]">
                         {{ project.name }}
                     </h1>
-                    <p class="text-sm text-muted-foreground">
-                        <Badge variant="outline" class="mr-2">{{
-                            project.status.label
-                        }}</Badge>
-                        Responsable : {{ project.owner.name }}
-                        <template v-if="project.starts_on && project.ends_on">
-                            · du {{ formatDate(project.starts_on) }} au
-                            {{ formatDate(project.ends_on) }}</template
+                    <p
+                        class="flex flex-wrap items-center gap-2 text-muted-foreground"
+                    >
+                        <Badge
+                            :variant="projectStatusTone(project.status.value)"
+                            >{{ project.status.label }}</Badge
+                        >
+                        <span
+                            >Responsable : {{ project.owner.name
+                            }}<template
+                                v-if="project.starts_on && project.ends_on"
+                            >
+                                · du {{ formatDate(project.starts_on) }} au
+                                {{ formatDate(project.ends_on) }}</template
+                            ></span
                         >
                     </p>
                 </div>
@@ -91,15 +117,21 @@ function removeMember(memberId: number) {
             </div>
         </div>
 
-        <div class="grid gap-8 lg:grid-cols-[2fr_1fr]">
-            <div class="space-y-6">
-                <section v-if="project.description" class="space-y-2">
+        <div class="grid items-start gap-4 lg:grid-cols-[2fr_1fr]">
+            <section class="panel space-y-5 p-5">
+                <div class="space-y-2">
                     <Heading variant="small" title="Description" />
-                    <p class="whitespace-pre-line">{{ project.description }}</p>
-                </section>
-                <section v-if="project.objectives" class="space-y-2">
+                    <p
+                        v-if="project.description"
+                        class="whitespace-pre-line text-ink-2"
+                    >
+                        {{ project.description }}
+                    </p>
+                    <p v-else class="empty-state">Pas encore de description.</p>
+                </div>
+                <div v-if="project.objectives" class="space-y-2">
                     <Heading variant="small" title="Objectifs" />
-                    <ul class="list-disc space-y-1 pl-5">
+                    <ul class="list-disc space-y-1 pl-5 text-ink-2">
                         <li
                             v-for="(objective, i) in project.objectives
                                 .split('\n')
@@ -109,32 +141,38 @@ function removeMember(memberId: number) {
                             {{ objective }}
                         </li>
                     </ul>
-                </section>
-            </div>
+                </div>
+            </section>
 
-            <section class="space-y-4">
-                <Heading
-                    variant="small"
-                    :title="`Membres (${project.members.length})`"
-                />
+            <section class="panel space-y-3.5 p-5">
+                <div class="flex items-center justify-between gap-2">
+                    <Heading variant="small" title="Membres" />
+                    <span class="text-[13px] text-muted-foreground">{{
+                        project.members.length
+                    }}</span>
+                </div>
                 <InputError :message="page.props.errors.member" />
-                <ul class="divide-y rounded-lg border">
+                <ul class="flex flex-col">
                     <li
                         v-for="member in project.members"
                         :key="member.id"
-                        class="flex items-center justify-between gap-2 p-3 text-sm"
+                        class="flex items-center gap-3 border-b border-border py-[11px] last:border-b-0"
                     >
-                        <span>
-                            <span class="font-medium">{{ member.name }}</span>
-                            <Badge
-                                v-if="member.is_owner"
-                                variant="secondary"
-                                class="ml-2"
-                                >Responsable</Badge
+                        <MemberAvatar :id="member.id" :name="member.name" />
+                        <span class="min-w-0 flex-1">
+                            <span class="block truncate font-medium">{{
+                                member.name
+                            }}</span>
+                            <span
+                                class="block truncate text-xs text-muted-foreground"
+                                >{{ member.email }}</span
                             >
                         </span>
+                        <Badge v-if="member.is_owner" variant="accent"
+                            >Responsable</Badge
+                        >
                         <Button
-                            v-if="can.manageMembers && !member.is_owner"
+                            v-else-if="can.manageMembers"
                             variant="ghost"
                             size="sm"
                             @click="removeMember(member.id)"
@@ -147,13 +185,13 @@ function removeMember(memberId: number) {
                     v-if="can.manageMembers && availableMembers.length"
                     v-bind="ProjectMemberController.store.form(project.id)"
                     :options="{ preserveScroll: true }"
-                    class="flex gap-2"
+                    class="flex flex-wrap gap-2 border-t border-border pt-3.5"
                     v-slot="{ errors, processing }"
                 >
                     <select
                         name="user_id"
                         aria-label="Membre à ajouter"
-                        class="h-9 flex-1 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs"
+                        class="control flex-1"
                     >
                         <option
                             v-for="member in availableMembers"
@@ -163,7 +201,11 @@ function removeMember(memberId: number) {
                             {{ member.name }}
                         </option>
                     </select>
-                    <Button type="submit" size="sm" :disabled="processing"
+                    <Button
+                        type="submit"
+                        size="sm"
+                        class="h-9"
+                        :disabled="processing"
                         >Ajouter</Button
                     >
                     <InputError :message="errors.user_id" />

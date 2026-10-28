@@ -7,13 +7,17 @@ const name = usePage().props.name;
 
 <template>
     <div
-        class="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground"
+        class="grid size-[34px] shrink-0 place-items-center rounded-[10px] bg-primary text-primary-foreground"
     >
-        <AppLogoIcon class="size-5 fill-current text-white dark:text-black" />
+        <AppLogoIcon class="size-5" />
     </div>
-    <div class="ml-1 grid flex-1 text-left text-sm">
-        <span class="mb-0.5 truncate leading-tight font-semibold">{{
-            name
-        }}</span>
+    <div class="ml-0.5 grid flex-1 text-left">
+        <span
+            class="truncate font-display text-[19px] leading-[1.1] font-bold tracking-[-0.02em]"
+            >{{ name }}</span
+        >
+        <span class="truncate text-xs text-muted-foreground"
+            >Gestion de projets</span
+        >
     </div>
 </template>

@@ -11,17 +11,24 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-    <header :class="variant === 'small' ? '' : 'mb-8 space-y-0.5'">
+    <!-- default = page title of the prototype; small = title of a card or section. -->
+    <header :class="variant === 'small' ? '' : 'space-y-1.5'">
         <h2
             :class="
                 variant === 'small'
-                    ? 'mb-0.5 text-base font-medium'
-                    : 'text-xl font-semibold tracking-tight'
+                    ? 'mb-0.5 text-[17px] font-semibold'
+                    : 'text-[30px] leading-[1.15] font-semibold'
             "
         >
             {{ title }}
         </h2>
-        <p v-if="description" class="text-sm text-muted-foreground">
+        <p
+            v-if="description"
+            :class="[
+                'text-muted-foreground',
+                variant === 'small' ? 'text-[13px]' : 'max-w-[62ch]',
+            ]"
+        >
             {{ description }}
         </p>
     </header>

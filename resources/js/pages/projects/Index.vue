@@ -2,8 +2,10 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { Plus } from '@lucide/vue';
 import Heading from '@/components/Heading.vue';
+import MemberAvatar from '@/components/MemberAvatar.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { projectStatusTone } from '@/lib/tones';
 import { create, index, show } from '@/routes/projects';
 
 type ProjectSummary = {
@@ -39,8 +41,8 @@ const formatDate = (date: string) =>
 <template>
     <Head title="Projets" />
 
-    <div class="space-y-6 p-4">
-        <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="space-y-6">
+        <div class="flex flex-wrap items-end justify-between gap-4">
             <Heading
                 title="Projets"
                 description="Les projets dont vous êtes membre, ou tous selon vos droits."
@@ -50,49 +52,60 @@ const formatDate = (date: string) =>
             </Button>
         </div>
 
-        <p
-            v-if="projects.length === 0"
-            class="rounded-lg border border-dashed p-8 text-center text-muted-foreground"
-        >
+        <p v-if="projects.length === 0" class="empty-state">
             Aucun projet pour l’instant.
         </p>
 
-        <div v-else class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div
+            v-else
+            class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4"
+        >
+            <!-- Project card of the prototype -->
             <Link
                 v-for="project in projects"
                 :key="project.id"
                 :href="show(project.id)"
-                class="group flex flex-col gap-3 rounded-xl border bg-card p-5 shadow-xs transition hover:shadow-md"
+                class="group flex flex-col gap-3.5 rounded-2xl border border-border bg-card p-[18px] text-left transition-[border-color,box-shadow] hover:border-line-2 hover:shadow-soft"
             >
                 <div class="flex items-start justify-between gap-3">
-                    <span class="flex items-center gap-3">
-                        <span
-                            class="grid size-9 shrink-0 place-content-center rounded-lg font-semibold text-white"
-                            :style="{ backgroundColor: project.color }"
-                            aria-hidden="true"
-                            >{{ project.name[0] }}</span
-                        >
-                        <span class="font-semibold group-hover:underline">{{
-                            project.name
-                        }}</span>
-                    </span>
-                    <Badge variant="outline">{{ project.status.label }}</Badge>
-                </div>
-                <p
-                    v-if="project.description"
-                    class="line-clamp-2 text-sm text-muted-foreground"
-                >
-                    {{ project.description }}
-                </p>
-                <p class="mt-auto text-sm text-muted-foreground">
-                    Responsable : {{ project.owner.name }} ·
-                    {{ project.members_count }} membre{{
-                        project.members_count > 1 ? 's' : ''
-                    }}
-                    <template v-if="project.ends_on">
-                        · fin {{ formatDate(project.ends_on) }}</template
+                    <span
+                        class="grid size-[38px] shrink-0 place-items-center rounded-[11px] font-display text-base font-bold text-white"
+                        :style="{ backgroundColor: project.color }"
+                        aria-hidden="true"
+                        >{{ project.name[0] }}</span
                     >
-                </p>
+                    <Badge :variant="projectStatusTone(project.status.value)">{{
+                        project.status.label
+                    }}</Badge>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-[17px]">{{ project.name }}</h3>
+                    <p
+                        class="line-clamp-2 min-h-10 text-[13.5px] text-muted-foreground"
+                    >
+                        {{ project.description }}
+                    </p>
+                </div>
+                <div
+                    class="mt-auto flex items-center justify-between gap-2 text-[12.5px] text-muted-foreground"
+                >
+                    <span class="flex min-w-0 items-center gap-2">
+                        <MemberAvatar
+                            :id="project.owner.id"
+                            :name="project.owner.name"
+                            size="xs"
+                        />
+                        <span class="truncate"
+                            >{{ project.owner.name }} ·
+                            {{ project.members_count }} membre{{
+                                project.members_count > 1 ? 's' : ''
+                            }}</span
+                        >
+                    </span>
+                    <span v-if="project.ends_on" class="shrink-0"
+                        >Fin {{ formatDate(project.ends_on) }}</span
+                    >
+                </div>
             </Link>
         </div>
     </div>

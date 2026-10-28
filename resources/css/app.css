@@ -12,6 +12,25 @@
         Instrument Sans, ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+    --font-display:
+        'Bricolage Grotesque', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+    --shadow-soft: var(--shadow);
+    --shadow-lift: var(--shadow-lg);
+
+    /* Prototype tokens without a shadcn equivalent. */
+    --color-surface-2: var(--surface-2);
+    --color-sunk: var(--sunk);
+    --color-line-2: var(--line-2);
+    --color-ink-2: var(--ink-2);
+    --color-faint: var(--faint);
+    --color-brand: var(--brand);
+    --color-brand-ink: var(--brand-ink);
+    --color-ok: var(--ok);
+    --color-warn: var(--warn);
+    --color-bad: var(--bad);
+    --color-info: var(--info);
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -128,6 +147,21 @@
     --sidebar-border: #e5e2db;
     --sidebar-ring: #c47a22;
     --sidebar: #faf9f6;
+
+    --surface-2: #f8f7f3;
+    --sunk: #eceae4;
+    --line-2: #d6d2c9;
+    --ink-2: #3a3f3c;
+    --faint: #9a9c95;
+    --brand: #c47a22;
+    --brand-ink: #8c5410;
+    --ok: #2e7d57;
+    --warn: #ae6f12;
+    --bad: #bf4237;
+    --info: #36689f;
+    --shadow:
+        0 1px 2px rgba(40, 30, 15, 0.05), 0 6px 18px rgba(40, 30, 15, 0.05);
+    --shadow-lg: 0 28px 70px rgba(30, 22, 10, 0.2);
 }
 
 .dark {
@@ -164,6 +198,20 @@
     --sidebar-border: #2c2e2a;
     --sidebar-ring: #e5a450;
     --sidebar: #171816;
+
+    --surface-2: #21221f;
+    --sunk: #151614;
+    --line-2: #3b3d38;
+    --ink-2: #cfccc4;
+    --faint: #74756e;
+    --brand: #e5a450;
+    --brand-ink: #f2c88e;
+    --ok: #62b98c;
+    --warn: #e2aa4e;
+    --bad: #e7756a;
+    --info: #7ea9dc;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 18px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.55);
 }
 
 @layer base {
@@ -172,5 +220,56 @@
     }
     body {
         @apply bg-background text-foreground;
+        font-size: 15px;
+        line-height: 1.5;
+    }
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+    }
+}
+
+/*
+  Components shared by the pages, taken from the prototype.
+*/
+@layer components {
+    /* Native <select> and <textarea>, aligned with the Input component. */
+    .control {
+        @apply w-full min-w-0 rounded-[9px] border border-border bg-card px-2.5 text-[13.5px] text-foreground transition-colors outline-none hover:border-line-2 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40;
+    }
+    select.control {
+        @apply h-9;
+    }
+    textarea.control {
+        @apply py-2 leading-relaxed;
+    }
+
+    /* A white rounded block: cards, lists, tables. */
+    .panel {
+        @apply rounded-2xl border border-border bg-card;
+    }
+
+    /* Table of data inside a .panel. */
+    .data-table {
+        @apply w-full border-collapse text-sm;
+    }
+    .data-table th {
+        @apply border-b border-border bg-surface-2 px-3.5 py-[11px] text-left text-xs font-semibold whitespace-nowrap text-muted-foreground;
+    }
+    .data-table td {
+        @apply border-b border-border px-3.5 py-[11px] align-middle;
+    }
+    .data-table tr:last-child td {
+        @apply border-b-0;
+    }
+
+    /* Nothing to show yet. */
+    .empty-state {
+        @apply rounded-xl border border-dashed border-line-2 px-4 py-7 text-center text-sm text-muted-foreground;
     }
 }

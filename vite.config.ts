@@ -11,9 +11,16 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.ts'],
             refresh: true,
+            // Typefaces of the prototype: display, body text, figures and code.
             fonts: [
+                bunny('Bricolage Grotesque', {
+                    weights: [500, 600, 700],
+                }),
                 bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
+                    weights: [400, 500, 600, 700],
+                }),
+                bunny('JetBrains Mono', {
+                    weights: [500, 600],
                 }),
             ],
         }),

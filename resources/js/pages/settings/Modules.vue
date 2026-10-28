@@ -52,7 +52,7 @@ function setEnabled(module: AppModule, enabled: boolean) {
 
         <InputError :message="page.props.errors.enabled" />
 
-        <ul class="divide-y rounded-lg border">
+        <ul class="panel divide-y divide-border">
             <li
                 v-for="module in modules"
                 :key="module.key"
@@ -63,11 +63,14 @@ function setEnabled(module: AppModule, enabled: boolean) {
                         {{ module.name }}
                         <Badge
                             v-if="module.required"
-                            variant="outline"
+                            variant="accent"
                             class="ml-2"
                             >Toujours actif</Badge
                         >
-                        <Badge v-else-if="module.enabled" class="ml-2"
+                        <Badge
+                            v-else-if="module.enabled"
+                            variant="ok"
+                            class="ml-2"
                             >Activé</Badge
                         >
                         <Badge v-else variant="secondary" class="ml-2"

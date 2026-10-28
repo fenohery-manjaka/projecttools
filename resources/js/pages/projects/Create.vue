@@ -27,12 +27,12 @@ defineOptions({
 <template>
     <Head title="Nouveau projet" />
 
-    <div class="max-w-2xl space-y-6 p-4">
+    <div class="max-w-2xl space-y-6">
         <Heading title="Nouveau projet" />
 
         <Form
             v-bind="ProjectController.store.form()"
-            class="space-y-6"
+            class="panel space-y-6 p-6"
             v-slot="{ errors, processing }"
         >
             <ProjectFields
