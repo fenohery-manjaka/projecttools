@@ -76,7 +76,7 @@ Aucune (tables créées au ticket 02).
 - [ ] Statut « Bloqué » sans raison : refusé côté serveur (pas seulement dans le formulaire).
 - [ ] « Terminé » remplit `completed_at`, revenir à un autre statut le vide.
 - [ ] Les boutons de statut rapides fonctionnent, et « Bloqué » demande la raison.
-- [ ] Après une erreur de validation, les textes tapés (description, raison) sont conservés : utiliser `:default-value`, comme dans `ProjectFields.vue`.
+- [ ] En modification, la description et la raison existantes sont pré-remplies ; après une erreur de validation, les textes tapés sont conservés. Sur un `<textarea>` natif, utiliser `:defaultValue` (et non `:value`, qui efface la saisie, ni `:default-value`, qui ne pré-remplit rien), comme dans `ProjectFields.vue`.
 - [ ] Observateur : pas de bouton Modifier/Supprimer ni de statut rapide, et 403 sur les routes correspondantes.
 - [ ] Non-membre du projet : 403 sur la page tâche.
 - [ ] Création, statut et suppression apparaissent dans `activity_log`.

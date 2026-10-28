@@ -21,9 +21,6 @@ defineProps<{
     owners: { id: number; name: string }[];
     errors: Record<string, string | undefined>;
 }>();
-
-const fieldClass =
-    'w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50';
 </script>
 
 <template>
@@ -39,8 +36,8 @@ const fieldClass =
             id="description"
             name="description"
             rows="3"
-            :class="fieldClass"
-            :default-value="values.description ?? ''"
+            class="control"
+            :defaultValue="values.description ?? ''"
         />
         <InputError :message="errors.description" />
     </div>
@@ -51,8 +48,8 @@ const fieldClass =
             id="objectives"
             name="objectives"
             rows="3"
-            :class="fieldClass"
-            :default-value="values.objectives ?? ''"
+            class="control"
+            :defaultValue="values.objectives ?? ''"
         />
         <InputError :message="errors.objectives" />
     </div>
@@ -60,7 +57,7 @@ const fieldClass =
     <div class="grid gap-4 sm:grid-cols-2">
         <div class="grid gap-2">
             <Label for="status">Statut</Label>
-            <select id="status" name="status" :class="fieldClass">
+            <select id="status" name="status" class="control">
                 <option
                     v-for="status in statuses"
                     :key="status.value"
@@ -74,7 +71,7 @@ const fieldClass =
         </div>
         <div class="grid gap-2">
             <Label for="owner_id">Responsable</Label>
-            <select id="owner_id" name="owner_id" :class="fieldClass">
+            <select id="owner_id" name="owner_id" class="control">
                 <option
                     v-for="owner in owners"
                     :key="owner.id"
