@@ -1,5 +1,7 @@
 # Conventions
 
+Nouveau sur le projet ? Commencez par le guide pas à pas `documentation/guide-demarrage.html` (installation, lancement, chemin complet jusqu'à la pull request), à ouvrir dans un navigateur, puis par le ticket d'essai `docs/tickets/essai/00-connexion-en-francais.md`.
+
 ## Travailler sur un ticket
 
 1. Prendre un ticket assigné sur le tableau GitHub et le passer en « En cours ».

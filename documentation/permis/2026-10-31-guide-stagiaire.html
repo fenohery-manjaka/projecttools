@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Plan · Guide du stagiaire</title>
+        <style>
+            :root {
+                --nuit: #1c201e;
+                --nuit2: #2c302d;
+                --trait: #5e625c;
+                --or: #e5a450;
+                --clair: #f3f2ee;
+                --texte: #1c201e;
+                --doux: #5e625c;
+                --vert: #2e7d57;
+                --vertfond: #e3f1e8;
+                --rouge: #bf4237;
+                --rougefond: #f8e6e3;
+                --carte: #ffffff;
+                --bord: #e5e2db;
+                --miel: #8c5410;
+                --mielfond: #f6e8d3;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+            }
+            body {
+                background: var(--clair);
+                font-family:
+                    'Segoe UI',
+                    system-ui,
+                    -apple-system,
+                    Arial,
+                    sans-serif;
+                color: var(--texte);
+                padding: 32px 16px;
+            }
+            .permis {
+                max-width: 860px;
+                margin: 0 auto;
+                background: var(--carte);
+                border: 1px solid var(--bord);
+                border-radius: 22px;
+                overflow: hidden;
+            }
+            .tete {
+                background: var(--nuit);
+                color: #f3f2ee;
+                padding: 28px 170px 28px 36px;
+                position: relative;
+            }
+            .tete small {
+                color: var(--or);
+                font-weight: 800;
+                letter-spacing: 2px;
+                font-size: 13px;
+                text-transform: uppercase;
+            }
+            .tete h1 {
+                font-size: 32px;
+                margin-top: 6px;
+                letter-spacing: -0.01em;
+            }
+            .tete p {
+                color: #cfccc4;
+                margin-top: 6px;
+                font-size: 16px;
+            }
+            .tampon {
+                position: absolute;
+                right: 32px;
+                top: 26px;
+                width: 108px;
+                height: 108px;
+                border: 3px solid var(--or);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: var(--or);
+                font-weight: 800;
+                font-size: 13px;
+                line-height: 1.3;
+                letter-spacing: 1px;
+                transform: rotate(-12deg);
+            }
+            .bloc {
+                padding: 26px 36px;
+                border-top: 1px solid var(--bord);
+                display: grid;
+                grid-template-columns: 170px 1fr;
+                gap: 20px;
+                align-items: start;
+            }
+            .bloc:first-of-type {
+                border-top: none;
+            }
+            .lbl {
+                font-weight: 800;
+                font-size: 13px;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                color: var(--doux);
+                padding-top: 4px;
+            }
+            .probleme {
+                font-size: 17px;
+                line-height: 1.55;
+            }
+            .scenes {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+            .scene {
+                border: 1px solid var(--bord);
+                border-radius: 14px;
+                padding: 12px;
+            }
+            .scene > b {
+                display: block;
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+            .ecran {
+                background: #f8f7f3;
+                border-radius: 10px;
+                padding: 12px;
+                font-size: 13px;
+                line-height: 1.5;
+                min-height: 178px;
+            }
+            .ecran .titre {
+                font-weight: 800;
+                margin-bottom: 6px;
+            }
+            .ecran ol {
+                padding-left: 18px;
+            }
+            .ecran code {
+                font-family: Consolas, 'Courier New', monospace;
+                font-size: 12px;
+                background: #eceae4;
+                border-radius: 4px;
+                padding: 0 4px;
+            }
+            .gris {
+                color: var(--doux);
+            }
+            .fichiers {
+                font-family: Consolas, 'Courier New', monospace;
+                font-size: 14px;
+                line-height: 2;
+            }
+            .fichiers i {
+                font-style: normal;
+                display: inline-block;
+                width: 20px;
+                font-weight: 700;
+            }
+            .mod {
+                color: #b7791f;
+            }
+            .add {
+                color: var(--vert);
+            }
+            .note {
+                font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+                color: var(--doux);
+                font-size: 13px;
+            }
+            .pastille {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                border-radius: 999px;
+                padding: 6px 14px;
+                font-weight: 800;
+                font-size: 14px;
+            }
+            .ok {
+                background: var(--vertfond);
+                color: var(--vert);
+            }
+            .non {
+                background: var(--rougefond);
+                color: var(--rouge);
+                margin: 0 6px 6px 0;
+            }
+            .preuve {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                font-size: 15px;
+                margin-bottom: 9px;
+                line-height: 1.45;
+            }
+            .case {
+                width: 20px;
+                height: 20px;
+                border: 2px solid var(--trait);
+                border-radius: 5px;
+                flex: none;
+                margin-top: 1px;
+            }
+            .cause {
+                background: var(--mielfond);
+                border-left: 4px solid var(--or);
+                padding: 10px 14px;
+                font-size: 14px;
+                margin-top: 12px;
+                line-height: 1.5;
+            }
+            .pied {
+                background: var(--clair);
+                padding: 20px 36px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                font-size: 14px;
+                color: var(--doux);
+                flex-wrap: wrap;
+            }
+            .signature {
+                border-bottom: 2px dashed var(--trait);
+                min-width: 220px;
+                padding-bottom: 4px;
+                color: var(--texte);
+                font-weight: 700;
+            }
+            @media (max-width: 640px) {
+                .tete {
+                    padding: 24px 20px 130px;
+                }
+                .tampon {
+                    top: auto;
+                    bottom: 16px;
+                    right: 20px;
+                    width: 96px;
+                    height: 96px;
+                }
+                .bloc {
+                    grid-template-columns: 1fr;
+                    padding: 20px;
+                    gap: 10px;
+                }
+                .scenes {
+                    grid-template-columns: 1fr;
+                }
+                .fichiers {
+                    font-size: 12.5px;
+                    overflow-wrap: anywhere;
+                }
+                .pied {
+                    padding: 18px 20px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="permis">
+            <div class="tete">
+                <small>Plan · documentation · 31/10/2026</small>
+                <h1>
+                    Guide du stagiaire : du projet récupéré à la pull request
+                </h1>
+                <p>
+                    Pour Rahaja (<b>Rahaja-Ranjanirina</b> sur GitHub),
+                    collaborateur du dépôt projecttools.
+                </p>
+                <div class="tampon">1 guide<br />1 ticket<br />d'essai</div>
+            </div>
+
+            <div class="bloc">
+                <div class="lbl">Le problème</div>
+                <p class="probleme">
+                    Rahaja, stagiaire, vient d'être ajouté comme
+                    <b>collaborateur</b> du dépôt GitHub. Il n'a jamais récupéré
+                    ni lancé le projet, et
+                    <b>rien ne lui explique le chemin complet</b> : installer
+                    les outils, lancer l'application, prendre un ticket, ouvrir
+                    une pull request. Les règles existent
+                    (<code>docs/conventions.md</code>) mais supposent qu'on sait
+                    déjà faire. Conséquence : il risque de bloquer dès
+                    l'installation, ou d'envoyer directement sur
+                    <code>main</code>, ou d'envoyer le fichier
+                    <code>.env</code>, et vous passez votre temps à dépanner au
+                    lieu de relire.
+                </p>
+            </div>
+
+            <div class="bloc">
+                <div class="lbl">Ce que je propose</div>
+                <div>
+                    <p class="probleme" style="margin-bottom: 14px">
+                        Un guide HTML pas à pas, lisible sans rien installer, et
+                        un premier petit ticket pour faire le chemin une fois
+                        avant le lot 1.
+                    </p>
+                    <div class="scenes">
+                        <div class="scene">
+                            <b>Aujourd'hui</b>
+                            <div class="ecran">
+                                <div class="titre">docs/conventions.md</div>
+                                <span class="gris"
+                                    >« Créer une branche depuis main… »<br />«
+                                    composer ci:check… »<br />« Ouvrir une pull
+                                    request… »</span
+                                >
+                                <p style="margin-top: 10px">
+                                    Des règles justes, mais
+                                    <b>rien sur l'installation</b>, ni sur Git
+                                    pas à pas, ni sur quoi faire quand ça
+                                    coince.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="scene">
+                            <b>Après</b>
+                            <div class="ecran">
+                                <div class="titre">
+                                    documentation/guide-stagiaire.html
+                                </div>
+                                <ol>
+                                    <li>
+                                        Installer Laragon, Git, Node (comme
+                                        vous)
+                                    </li>
+                                    <li>
+                                        Accepter l'invitation, configurer Git
+                                    </li>
+                                    <li>Récupérer et lancer le projet</li>
+                                    <li>
+                                        Lire l'architecture, le module Projets
+                                    </li>
+                                    <li>
+                                        Le chemin d'un ticket, commande par
+                                        commande
+                                    </li>
+                                    <li>Ce qu'il ne faut jamais faire</li>
+                                    <li>Quand ça coince</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="cause">
+                        <b>Ticket d'essai :</b> traduire en français les pages
+                        de connexion, d'inscription et de mot de passe, encore
+                        en anglais. Un vrai besoin, sans risque, facile à relire
+                        : Rahaja fait une fois tout le chemin jusqu'à la pull
+                        request.<br /><b>Envoi :</b> GitHub n'affiche pas un
+                        fichier HTML comme une page. La première fois, vous lui
+                        envoyez le fichier (e-mail, messagerie) ; ensuite il le
+                        retrouve dans le projet.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bloc">
+                <div class="lbl">Je touche</div>
+                <div class="fichiers">
+                    <div>
+                        <i class="add">+</i>documentation/guide-stagiaire.html
+                        <span class="note"
+                            >· le guide, autonome, lisible hors ligne</span
+                        >
+                    </div>
+                    <div>
+                        <i class="add">+</i
+                        >docs/tickets/essai/00-connexion-en-francais.md
+                        <span class="note">· le ticket d'essai</span>
+                    </div>
+                    <div>
+                        <i class="mod">~</i>docs/conventions.md:1
+                        <span class="note">· lien vers le guide</span>
+                    </div>
+                    <div>
+                        <i class="mod">~</i>docs/tickets/lot-1/README.md:1
+                        <span class="note"
+                            >· commencer par le ticket d'essai</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="bloc">
+                <div class="lbl">Base de données</div>
+                <div><span class="pastille ok">Aucune</span></div>
+            </div>
+
+            <div class="bloc">
+                <div class="lbl">Je ne touche pas</div>
+                <div>
+                    <span class="pastille non">Code de l'application</span>
+                    <span class="pastille non"
+                        >Pages de connexion (c'est le ticket de Rahaja)</span
+                    >
+                    <span class="pastille non">Réglages du dépôt GitHub</span>
+                </div>
+            </div>
+
+            <div class="bloc">
+                <div class="lbl">Tu sauras que c'est fait</div>
+                <div>
+                    <div class="preuve">
+                        <span class="case"></span>Je suis le guide moi-même dans
+                        un dossier vide : chaque commande copiée telle quelle
+                        fonctionne, jusqu'à l'application lancée et la connexion
+                        avec un compte de test (capture).
+                    </div>
+                    <div class="preuve">
+                        <span class="case"></span>La partie « ticket » est
+                        rejouée sur une branche d'essai : branche, commit,
+                        <code>composer ci:check</code> vert ; je m'arrête avant
+                        l'envoi, puis je supprime la branche.
+                    </div>
+                    <div class="preuve">
+                        <span class="case"></span>Le guide s'ouvre sans
+                        connexion internet et se lit sur téléphone, sans
+                        débordement.
+                    </div>
+                    <div class="preuve">
+                        <span class="case"></span>Le ticket d'essai contient
+                        toutes les rubriques du modèle de ticket.
+                    </div>
+                    <div class="preuve">
+                        <span class="case"></span>Vos 2 commits en attente et
+                        celui du guide sont envoyés sur GitHub, pour que Rahaja
+                        récupère la bonne version.
+                    </div>
+                    <div class="preuve">
+                        <span class="case"></span>Contrôle final : seuls les 4
+                        fichiers listés sont touchés.
+                    </div>
+                </div>
+            </div>
+
+            <div class="pied">
+                <span>Ce que j'attends de toi</span>
+                <span class="signature">« oui », ou ce qu'il faut changer</span>
+            </div>
+        </div>
+    </body>
+</html>

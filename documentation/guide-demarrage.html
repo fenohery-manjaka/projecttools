@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Bien démarrer sur ProjectTools</title>
+        <style>
+            :root {
+                --bg: #f3f2ee;
+                --surface: #ffffff;
+                --surface-2: #f8f7f3;
+                --sunk: #eceae4;
+                --line: #e5e2db;
+                --line-2: #d6d2c9;
+                --ink: #1c201e;
+                --ink-2: #3a3f3c;
+                --muted: #5e625c;
+                --brand: #c47a22;
+                --brand-ink: #8c5410;
+                --brand-soft: #f6e8d3;
+                --ok: #2e7d57;
+                --ok-soft: #e3f1e8;
+                --bad: #bf4237;
+                --bad-soft: #f8e6e3;
+                --info: #36689f;
+                --info-soft: #e4ecf5;
+                --shadow:
+                    0 1px 2px rgba(40, 30, 15, 0.05),
+                    0 6px 18px rgba(40, 30, 15, 0.05);
+                --code-bg: #1c201e;
+                --code-ink: #eceae4;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #121311;
+                    --surface: #1c1d1a;
+                    --surface-2: #21221f;
+                    --sunk: #151614;
+                    --line: #2c2e2a;
+                    --line-2: #3b3d38;
+                    --ink: #eceae4;
+                    --ink-2: #cfccc4;
+                    --muted: #9c9b93;
+                    --brand: #e5a450;
+                    --brand-ink: #f2c88e;
+                    --brand-soft: #3a2b17;
+                    --ok: #62b98c;
+                    --ok-soft: #18291f;
+                    --bad: #e7756a;
+                    --bad-soft: #2e1a17;
+                    --info: #7ea9dc;
+                    --info-soft: #18222e;
+                    --shadow:
+                        0 1px 2px rgba(0, 0, 0, 0.3),
+                        0 6px 18px rgba(0, 0, 0, 0.25);
+                    --code-bg: #0d0e0c;
+                    --code-ink: #eceae4;
+                }
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 16px;
+            }
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--ink);
+                font:
+                    16px/1.6 'Segoe UI',
+                    system-ui,
+                    -apple-system,
+                    Roboto,
+                    Arial,
+                    sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+            h1,
+            h2,
+            h3 {
+                line-height: 1.2;
+                letter-spacing: -0.015em;
+                margin: 0;
+            }
+            a {
+                color: var(--brand-ink);
+            }
+            code,
+            pre,
+            kbd {
+                font-family:
+                    Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace;
+            }
+            p code,
+            li code,
+            td code {
+                background: var(--sunk);
+                border-radius: 5px;
+                padding: 1px 5px;
+                font-size: 0.9em;
+                overflow-wrap: anywhere;
+            }
+            kbd {
+                background: var(--surface);
+                border: 1px solid var(--line-2);
+                border-bottom-width: 2px;
+                border-radius: 5px;
+                padding: 0 5px;
+                font-size: 0.85em;
+            }
+
+            .page {
+                max-width: 920px;
+                margin: 0 auto;
+                padding: 32px 16px 64px;
+            }
+            .hero {
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+            .mark {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background: var(--ink);
+                color: var(--bg);
+                display: grid;
+                place-items: center;
+                flex: none;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+            .hero p {
+                margin: 4px 0 0;
+                color: var(--muted);
+            }
+
+            .path {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                align-items: center;
+                margin: 24px 0 8px;
+                font-size: 14px;
+            }
+            .path span {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                padding: 4px 12px;
+                font-weight: 600;
+            }
+            .path b {
+                color: var(--muted);
+                font-weight: 400;
+            }
+
+            .toc {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 16px;
+                padding: 18px 22px;
+                margin: 24px 0 32px;
+            }
+            .toc h2 {
+                font-size: 13px;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+                color: var(--muted);
+                margin-bottom: 8px;
+            }
+            .toc ol {
+                margin: 0;
+                padding-left: 22px;
+                columns: 2;
+                column-gap: 32px;
+            }
+            .toc li {
+                margin: 3px 0;
+                break-inside: avoid;
+            }
+
+            .step {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 16px;
+                padding: 24px;
+                margin-bottom: 20px;
+            }
+            .step-head {
+                display: flex;
+                gap: 14px;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+            .num {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: var(--brand-soft);
+                color: var(--brand-ink);
+                display: grid;
+                place-items: center;
+                font-weight: 800;
+                flex: none;
+            }
+            .step h2 {
+                font-size: 22px;
+            }
+            .step h3 {
+                font-size: 16px;
+                margin: 20px 0 6px;
+            }
+            .why {
+                color: var(--muted);
+                margin-top: 0;
+            }
+
+            .cmd {
+                position: relative;
+                margin: 10px 0;
+            }
+            .cmd pre {
+                background: var(--code-bg);
+                color: var(--code-ink);
+                border-radius: 12px;
+                padding: 14px 92px 14px 16px;
+                margin: 0;
+                overflow-x: auto;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            .cmd button {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                border: 1px solid #3b3d38;
+                background: #2c302d;
+                color: #eceae4;
+                border-radius: 8px;
+                height: 30px;
+                padding: 0 10px;
+                font:
+                    600 13px/1 'Segoe UI',
+                    system-ui,
+                    sans-serif;
+                cursor: pointer;
+            }
+            .cmd button:hover {
+                background: #3a3f3c;
+            }
+            .cmd .label {
+                display: block;
+                font-size: 13px;
+                color: var(--muted);
+                margin-bottom: 4px;
+            }
+
+            .expect {
+                border-left: 4px solid var(--ok);
+                background: var(--ok-soft);
+                border-radius: 0 10px 10px 0;
+                padding: 10px 14px;
+                margin: 12px 0;
+            }
+            .warn {
+                border-left: 4px solid var(--brand);
+                background: var(--brand-soft);
+                border-radius: 0 10px 10px 0;
+                padding: 10px 14px;
+                margin: 12px 0;
+            }
+            .expect b,
+            .warn b {
+                display: block;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 15px;
+                margin: 8px 0;
+            }
+            th {
+                text-align: left;
+                font-size: 13px;
+                color: var(--muted);
+                font-weight: 600;
+                background: var(--surface-2);
+            }
+            th,
+            td {
+                border-bottom: 1px solid var(--line);
+                padding: 9px 12px;
+                vertical-align: top;
+            }
+            .table-wrap {
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                overflow-x: auto;
+            }
+            .table-wrap tr:last-child td {
+                border-bottom: 0;
+            }
+
+            .rules {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                gap: 10px;
+            }
+            .rules li {
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+                background: var(--bad-soft);
+                border-radius: 10px;
+                padding: 10px 14px;
+            }
+            .rules li::before {
+                content: '✕';
+                color: var(--bad);
+                font-weight: 800;
+            }
+
+            details {
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 0 16px;
+                margin: 10px 0;
+                background: var(--surface-2);
+            }
+            details[open] {
+                padding-bottom: 12px;
+            }
+            summary {
+                cursor: pointer;
+                font-weight: 600;
+                padding: 12px 0;
+            }
+
+            .foot {
+                color: var(--muted);
+                font-size: 14px;
+                text-align: center;
+                margin-top: 32px;
+            }
+
+            @media (max-width: 640px) {
+                .hero h1 {
+                    font-size: 26px;
+                }
+                .toc ol {
+                    columns: 1;
+                }
+                .step {
+                    padding: 18px;
+                }
+                .cmd pre {
+                    font-size: 13px;
+                    padding-right: 16px;
+                    padding-top: 44px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="page">
+            <header class="hero">
+                <div class="mark" aria-hidden="true">
+                    <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M4 19c4-1 5-6 8-6s4 3 8 2" />
+                        <path d="M4 12c3 0 4-5 8-5s5 3 8 2" />
+                    </svg>
+                </div>
+                <div>
+                    <h1>Bien démarrer sur ProjectTools</h1>
+                    <p>
+                        Du projet récupéré à votre première pull request, étape
+                        par étape.
+                    </p>
+                </div>
+            </header>
+
+            <div class="path" aria-label="Le chemin d'un ticket">
+                <span>Ticket</span><b>→</b><span>Branche</span><b>→</b
+                ><span>Code</span><b>→</b><span>Vérification</span><b>→</b
+                ><span>Envoi</span><b>→</b><span>Pull request</span><b>→</b
+                ><span>Relecture</span><b>→</b><span>Fusion</span>
+            </div>
+
+            <nav class="toc" aria-label="Sommaire">
+                <h2>Sommaire</h2>
+                <ol>
+                    <li><a href="#outils">Installer les outils</a></li>
+                    <li><a href="#github">Accéder au dépôt GitHub</a></li>
+                    <li><a href="#lancer">Récupérer et lancer le projet</a></li>
+                    <li><a href="#comprendre">Comprendre avant de coder</a></li>
+                    <li><a href="#ticket">Le chemin d'un ticket</a></li>
+                    <li>
+                        <a href="#regles">Les règles à ne jamais enfreindre</a>
+                    </li>
+                    <li><a href="#coince">Quand ça coince</a></li>
+                </ol>
+            </nav>
+
+            <!-- 1 -->
+            <section class="step" id="outils">
+                <div class="step-head">
+                    <span class="num">1</span>
+                    <h2>Installer les outils</h2>
+                </div>
+                <p class="why">
+                    À faire une seule fois sur votre ordinateur. Les
+                    instructions visent Windows ; sur Mac ou Linux, les mêmes
+                    outils s'installent avec le gestionnaire de paquets
+                    habituel.
+                </p>
+
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th>Outil</th>
+                            <th>Version</th>
+                            <th>Où le trouver</th>
+                        </tr>
+                        <tr>
+                            <td>PHP + Composer</td>
+                            <td>PHP 8.3 ou plus, Composer 2</td>
+                            <td>
+                                <a href="https://laragon.org/download/"
+                                    >Laragon</a
+                                >
+                                (version « Full ») installe les deux.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Node.js + npm</td>
+                            <td>22 (LTS)</td>
+                            <td>
+                                <a href="https://nodejs.org/">nodejs.org</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Git</td>
+                            <td>2.40 ou plus</td>
+                            <td>
+                                <a href="https://git-scm.com/download/win"
+                                    >git-scm.com</a
+                                >
+                                (installe aussi Git Bash et la connexion à
+                                GitHub)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Éditeur</td>
+                            <td>—</td>
+                            <td>VS Code ou PhpStorm, au choix</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>Vérifier l'installation</h3>
+                <p>
+                    Ouvrez un terminal (Git Bash, PowerShell ou le terminal de
+                    Laragon) et lancez :
+                </p>
+                <div class="cmd">
+                    <pre><code>php -v
+composer --version
+node -v
+git --version</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <div class="expect">
+                    <b>Vous devez voir</b>PHP 8.3 (ou plus), Composer 2.x, Node
+                    v22.x et une version de Git. Si une commande est «
+                    introuvable », l'outil n'est pas installé ou pas dans le
+                    PATH : rouvrez le terminal après l'installation.
+                </div>
+
+                <h3>Extensions PHP nécessaires</h3>
+                <div class="cmd">
+                    <pre><code>php -m</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <p>
+                    La liste doit contenir <code>pdo_sqlite</code>,
+                    <code>sqlite3</code>, <code>fileinfo</code> et
+                    <code>mbstring</code>. Sinon, dans Laragon : menu
+                    <b>PHP › Extensions</b>, cochez-les, puis redémarrez
+                    Laragon.
+                </p>
+            </section>
+
+            <!-- 2 -->
+            <section class="step" id="github">
+                <div class="step-head">
+                    <span class="num">2</span>
+                    <h2>Accéder au dépôt GitHub</h2>
+                </div>
+                <p class="why">
+                    Le code vit sur
+                    <a href="https://github.com/fenohery-manjaka/projecttools"
+                        >github.com/fenohery-manjaka/projecttools</a
+                    >.
+                </p>
+
+                <h3>Accepter l'invitation</h3>
+                <p>
+                    Vous avez reçu un e-mail de GitHub. Acceptez l'invitation,
+                    ou ouvrez
+                    <a
+                        href="https://github.com/fenohery-manjaka/projecttools/invitations"
+                        >la page des invitations du dépôt</a
+                    >
+                    en étant connecté à votre compte GitHub.
+                </p>
+
+                <h3>Dire à Git qui vous êtes</h3>
+                <p>
+                    Utilisez le même e-mail que sur votre compte GitHub, pour
+                    que vos commits vous soient attribués.
+                </p>
+                <div class="cmd">
+                    <pre><code>git config --global user.name "Prénom Nom"
+git config --global user.email "vous@exemple.com"</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+
+                <h3>Se connecter à GitHub</h3>
+                <p>
+                    Rien à faire à l'avance : la première fois que Git parle à
+                    GitHub (étape suivante), une fenêtre du navigateur s'ouvre
+                    pour vous connecter. Acceptez, et Git s'en souviendra.
+                </p>
+            </section>
+
+            <!-- 3 -->
+            <section class="step" id="lancer">
+                <div class="step-head">
+                    <span class="num">3</span>
+                    <h2>Récupérer et lancer le projet</h2>
+                </div>
+                <p class="why">
+                    On télécharge le code, on installe tout ce dont il a besoin,
+                    on remplit une base de test, puis on démarre l'application
+                    sur votre ordinateur.
+                </p>
+
+                <h3>Télécharger le code</h3>
+                <p>
+                    Placez-vous dans le dossier de vos projets (avec Laragon :
+                    <code>C:\laragon\www</code>), puis :
+                </p>
+                <div class="cmd">
+                    <pre><code>git clone https://github.com/fenohery-manjaka/projecttools.git
+cd projecttools</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+
+                <h3>Tout installer</h3>
+                <p>
+                    Une seule commande installe les dépendances PHP et
+                    JavaScript, crée le fichier de configuration
+                    <code>.env</code>, la base de données et construit
+                    l'interface. Comptez quelques minutes.
+                </p>
+                <div class="cmd">
+                    <pre><code>composer setup</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <p>
+                    Si la commande demande de créer la base de données SQLite,
+                    répondez <kbd>yes</kbd>.
+                </p>
+
+                <h3>Remplir la base avec des données de test</h3>
+                <div class="cmd">
+                    <pre><code>php artisan db:seed</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+
+                <h3>Démarrer l'application</h3>
+                <div class="cmd">
+                    <pre><code>composer dev</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <p>
+                    Laissez ce terminal ouvert : il fait tourner l'application
+                    et recharge l'interface à chaque modification. Ouvrez
+                    <a href="http://localhost:8000">http://localhost:8000</a>.
+                    Pour arrêter : <kbd>Ctrl</kbd> + <kbd>C</kbd>.
+                </p>
+
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th>Compte de test</th>
+                            <th>Mot de passe</th>
+                            <th>Rôle</th>
+                        </tr>
+                        <tr>
+                            <td><code>test@example.com</code></td>
+                            <td><code>password</code></td>
+                            <td>Super admin : voit et peut tout</td>
+                        </tr>
+                        <tr>
+                            <td><code>contributeur@example.com</code></td>
+                            <td><code>password</code></td>
+                            <td>
+                                Contributeur : droits limités, utile pour tester
+                                un refus
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="expect">
+                    <b>Vous devez voir</b>la page « Projets » avec deux projets,
+                    après connexion avec <code>test@example.com</code>.
+                </div>
+                <p>
+                    Ces comptes n'existent que sur votre ordinateur. Pour
+                    repartir de zéro à tout moment :
+                    <code>php artisan migrate:fresh --seed</code> (efface la
+                    base locale et la recrée).
+                </p>
+            </section>
+
+            <!-- 4 -->
+            <section class="step" id="comprendre">
+                <div class="step-head">
+                    <span class="num">4</span>
+                    <h2>Comprendre avant de coder</h2>
+                </div>
+                <p class="why">
+                    Une demi-heure de lecture évite des heures de corrections.
+                    Tout est dans le dossier <code>docs/</code> du projet.
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <tr>
+                            <th>À lire</th>
+                            <th>Pourquoi</th>
+                        </tr>
+                        <tr>
+                            <td><code>docs/plan.md</code></td>
+                            <td>
+                                Ce qu'on construit, les décisions déjà prises,
+                                l'ordre des lots.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>docs/architecture.md</code></td>
+                            <td>
+                                Les modules, les contrôles d'accès, comment
+                                créer un module.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>docs/conventions.md</code></td>
+                            <td>
+                                Les règles de code, de branches, de commits et
+                                de tests.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>app/Modules/Projects/</code></td>
+                            <td>
+                                Le module modèle : quand vous créez quelque
+                                chose, copiez sa façon de faire.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>docs/tickets/</code></td>
+                            <td>
+                                Les tickets, rédigés avec le contexte, les
+                                fichiers autorisés et les critères
+                                d'acceptation.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <p>
+                    Vous utilisez un assistant IA (Claude Code, Cursor,
+                    Copilot…) ? Lancez une fois
+                    <code>php artisan boost:install</code> : il reçoit les
+                    règles du projet
+                    (<code>.ai/guidelines/projecttools.md</code>) et les
+                    respecte.
+                </p>
+            </section>
+
+            <!-- 5 -->
+            <section class="step" id="ticket">
+                <div class="step-head">
+                    <span class="num">5</span>
+                    <h2>Le chemin d'un ticket</h2>
+                </div>
+                <p class="why">
+                    Toujours le même chemin, du ticket à la fusion. L'exemple
+                    utilise le ticket 42 « sous-tâches » : remplacez le numéro
+                    et le nom par ceux de votre ticket.
+                </p>
+
+                <h3>a. Partir de la dernière version</h3>
+                <div class="cmd">
+                    <pre><code>git switch main
+git pull</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+
+                <h3>b. Créer votre branche</h3>
+                <p>
+                    Un ticket = une branche. Nom :
+                    <code
+                        >lot&lt;numéro du lot&gt;/&lt;numéro du
+                        ticket&gt;-&lt;sujet court&gt;</code
+                    >.
+                </p>
+                <div class="cmd">
+                    <pre><code>git switch -c lot1/42-sous-taches</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+
+                <h3>c. Coder</h3>
+                <p>
+                    Ne modifiez <b>que les fichiers listés dans le ticket</b>.
+                    Gardez <code>composer dev</code> ouvert et vérifiez dans le
+                    navigateur, avec le compte super admin <b>et</b> le compte
+                    contributeur.
+                </p>
+
+                <h3>d. Vérifier avant d'envoyer</h3>
+                <div class="cmd">
+                    <pre><code>composer ci:check</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <p>
+                    C'est exactement ce que GitHub vérifiera : mise en forme,
+                    types, analyse du code et tests. S'il signale un problème de
+                    mise en forme, ces deux commandes le corrigent toutes seules
+                    :
+                </p>
+                <div class="cmd">
+                    <pre><code>composer lint
+npm run check:fix</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <div class="expect">
+                    <b>Vous devez voir</b>tous les contrôles « passed » et tous
+                    les tests verts, avant de passer à la suite.
+                </div>
+
+                <h3>e. Enregistrer votre travail (commit)</h3>
+                <p>
+                    Regardez d'abord ce qui a changé, puis ajoutez les fichiers
+                    du ticket :
+                </p>
+                <div class="cmd">
+                    <pre><code>git status
+git add app/Modules/Tasks resources/js/pages/tasks tests/Feature/Modules/Tasks
+git commit -m "feat(tasks): ajouter les sous-tâches d'une tâche"</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <p>
+                    Le message tient en <b>une phrase</b>, en français, au
+                    format <code>type(module): ce que fait le changement</code>.
+                    Types courants : <code>feat</code> (nouvelle
+                    fonctionnalité), <code>fix</code> (correction),
+                    <code>docs</code>, <code>style</code>, <code>test</code>,
+                    <code>refactor</code>. Vous pouvez faire plusieurs commits
+                    sur la même branche.
+                </p>
+
+                <h3>f. Envoyer votre branche sur GitHub</h3>
+                <div class="cmd">
+                    <pre><code>git push -u origin lot1/42-sous-taches</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+
+                <h3>g. Ouvrir la pull request</h3>
+                <p>
+                    Git affiche un lien après l'envoi ; sinon, ouvrez le dépôt
+                    sur GitHub : un bandeau jaune propose
+                    <b>« Compare &amp; pull request »</b>.
+                </p>
+                <ul>
+                    <li>branche de base : <code>main</code> ;</li>
+                    <li>titre : le message de votre commit ;</li>
+                    <li>
+                        remplissez le modèle qui s'affiche (ce qui change, cases
+                        à cocher, capture d'écran) ;
+                    </li>
+                    <li>
+                        si le ticket est sur GitHub, écrivez
+                        <code>Closes #42</code> : il se fermera tout seul à la
+                        fusion.
+                    </li>
+                </ul>
+                <div class="expect">
+                    <b>Vous devez voir</b>la vérification GitHub (« tests »)
+                    passer au vert en quelques minutes, puis la demande de
+                    relecture.
+                </div>
+
+                <h3>h. Après la relecture</h3>
+                <p>
+                    On vous demande des corrections ? Corrigez sur la
+                    <b>même branche</b>, refaites
+                    <code>composer ci:check</code>, un commit, puis :
+                </p>
+                <div class="cmd">
+                    <pre><code>git push</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <p>
+                    La pull request se met à jour toute seule. Ne la fusionnez
+                    jamais vous-même : c'est le relecteur qui le fait.
+                </p>
+
+                <h3>i. Une fois fusionnée</h3>
+                <div class="cmd">
+                    <pre><code>git switch main
+git pull
+git branch -d lot1/42-sous-taches</code></pre>
+                    <button type="button">Copier</button>
+                </div>
+                <p>
+                    Vous êtes prêt pour le ticket suivant : retour à l'étape a.
+                </p>
+            </section>
+
+            <!-- 6 -->
+            <section class="step" id="regles">
+                <div class="step-head">
+                    <span class="num">6</span>
+                    <h2>Les règles à ne jamais enfreindre</h2>
+                </div>
+                <ul class="rules">
+                    <li>
+                        <span
+                            >Envoyer directement sur <code>main</code>. Tout
+                            passe par une branche et une pull request.</span
+                        >
+                    </li>
+                    <li>
+                        <span
+                            >Committer le fichier <code>.env</code>, la base
+                            <code>database/database.sqlite</code>,
+                            <code>vendor/</code> ou <code>node_modules/</code>.
+                            Ils sont ignorés exprès : ne les forcez pas.</span
+                        >
+                    </li>
+                    <li>
+                        <span
+                            >Écrire un mot de passe, une clé ou un jeton dans le
+                            code. <b>Le dépôt est public</b> : tout ce qui est
+                            envoyé est visible par tous, même après
+                            suppression.</span
+                        >
+                    </li>
+                    <li>
+                        <span
+                            >Modifier un fichier qui n'est pas listé dans le
+                            ticket, en particulier
+                            <code>app/Modules/Core</code>, <code>config/</code>,
+                            <code>bootstrap/</code> et <code>routes/</code>. Si
+                            c'est nécessaire, demandez d'abord.</span
+                        >
+                    </li>
+                    <li>
+                        <span
+                            >Utiliser <code>git push --force</code>, ou
+                            fusionner votre propre pull request.</span
+                        >
+                    </li>
+                    <li>
+                        <span
+                            >Ajouter une bibliothèque (Composer ou npm) sans
+                            accord.</span
+                        >
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 7 -->
+            <section class="step" id="coince">
+                <div class="step-head">
+                    <span class="num">7</span>
+                    <h2>Quand ça coince</h2>
+                </div>
+
+                <details>
+                    <summary>
+                        <code>composer setup</code> s'arrête sur une erreur
+                        d'extension PHP
+                    </summary>
+                    <p>
+                        Il manque une extension (souvent
+                        <code>pdo_sqlite</code>, <code>sqlite3</code> ou
+                        <code>fileinfo</code>). Activez-la dans Laragon (<b
+                            >PHP › Extensions</b
+                        >), redémarrez Laragon, rouvrez le terminal et relancez
+                        <code>composer setup</code>.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        Page d'erreur « Vite manifest » ou page blanche
+                    </summary>
+                    <p>
+                        L'interface n'est pas construite ou
+                        <code>composer dev</code> n'est pas lancé. Lancez
+                        <code>composer dev</code>, ou une fois
+                        <code>npm run build</code>.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        « Address already in use » ou le port 8000 est occupé
+                    </summary>
+                    <p>
+                        Une autre application utilise le port 8000 (souvent un
+                        autre projet lancé). Arrêtez-la avec <kbd>Ctrl</kbd> +
+                        <kbd>C</kbd> dans son terminal, puis relancez
+                        <code>composer dev</code>.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        La vérification GitHub de ma pull request est rouge
+                    </summary>
+                    <p>
+                        Cliquez sur <b>« Details »</b> à côté de la vérification
+                        pour lire l'erreur. Relancez
+                        <code>composer ci:check</code> chez vous : vous verrez
+                        la même erreur. Corrigez, commit, <code>git push</code>.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        GitHub signale un conflit sur ma pull request
+                    </summary>
+                    <p>
+                        Quelqu'un a modifié les mêmes lignes entre-temps.
+                        Récupérez la dernière version dans votre branche :
+                    </p>
+                    <div class="cmd">
+                        <pre><code>git switch main
+git pull
+git switch lot1/42-sous-taches
+git merge main</code></pre>
+                        <button type="button">Copier</button>
+                    </div>
+                    <p>
+                        Ouvrez les fichiers signalés, gardez la bonne version
+                        entre les marques
+                        <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> et
+                        <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>, supprimez les
+                        marques, puis <code>git add</code>,
+                        <code>git commit</code> et <code>git push</code>. En cas
+                        de doute, demandez avant.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        « Permission denied » ou « Repository not found » au
+                        moment d'envoyer
+                    </summary>
+                    <p>
+                        L'invitation n'est pas acceptée, ou Git est connecté
+                        avec un autre compte. Vérifiez l'invitation (étape 2) ;
+                        sous Windows, supprimez l'identifiant «
+                        git:https://github.com » dans le
+                        <b>Gestionnaire d'identification</b>, puis renvoyez : la
+                        fenêtre de connexion réapparaît.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        J'ai fait une erreur dans mon dernier commit, pas encore
+                        envoyé
+                    </summary>
+                    <p>
+                        Corrigez les fichiers, puis <code>git add</code> et un
+                        nouveau commit. Ne réécrivez pas l'historique d'une
+                        branche déjà envoyée.
+                    </p>
+                </details>
+
+                <div class="warn">
+                    <b>Toujours bloqué ?</b>Demandez de l'aide en collant la
+                    commande lancée et <b>le message d'erreur complet</b> (pas
+                    une capture coupée). Plus la question est précise, plus la
+                    réponse est rapide.
+                </div>
+            </section>
+
+            <p class="foot">
+                Ce guide vit dans le projet :
+                <code>documentation/guide-demarrage.html</code>. Une étape
+                fausse ou manquante ? Proposez la correction dans une pull
+                request.
+            </p>
+        </main>
+
+        <script>
+            // "Copier" buttons: copy the command block next to them (works offline, falls back to selecting the text).
+            document.querySelectorAll('.cmd button').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var code = button.parentElement.querySelector('code');
+                    var text = code.innerText;
+                    var done = function () {
+                        button.textContent = 'Copié';
+                        setTimeout(function () {
+                            button.textContent = 'Copier';
+                        }, 1500);
+                    };
+                    if (navigator.clipboard && window.isSecureContext) {
+                        navigator.clipboard.writeText(text).then(done, select);
+                    } else {
+                        select();
+                    }
+                    function select() {
+                        var range = document.createRange();
+                        range.selectNodeContents(code);
+                        var selection = window.getSelection();
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        try {
+                            document.execCommand('copy');
+                            done();
+                        } catch (e) {
+                            button.textContent = 'Ctrl+C';
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

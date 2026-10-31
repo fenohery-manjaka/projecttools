@@ -2,6 +2,8 @@
 
 Le quotidien de l'équipe : tâches (liste, tableau, détail, sous-tâches, commentaires), Mes tâches, Accueil, Calendrier, et la page projet complète (jalons, progression, archivage).
 
+**Avant le premier ticket de ce lot** : suivre `documentation/guide-demarrage.html`, puis faire le ticket d'essai [00 · Pages de connexion en français](../essai/00-connexion-en-francais.md), pour parcourir une fois tout le chemin jusqu'à la pull request.
+
 Chaque fichier ci-dessous suit le gabarit GitHub « Tâche » (`.github/ISSUE_TEMPLATE/tache.yml`) : on copie chaque rubrique dans le champ du même nom. Tant que `gh` n'est pas installé, les tickets vivent ici ; ensuite ils seront créés sur GitHub avec le jalon « Lot 1 ».
 
 ## Ordre et dépendances
