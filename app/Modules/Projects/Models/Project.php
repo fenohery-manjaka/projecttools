@@ -5,6 +5,7 @@ namespace App\Modules\Projects\Models;
 use App\Models\User;
 use App\Modules\Projects\Database\Factories\ProjectFactory;
 use App\Modules\Projects\Policies\ProjectPolicy;
+use App\Modules\Tasks\Models\Task;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -84,6 +85,16 @@ class Project extends Model
     public function milestones(): HasMany
     {
         return $this->hasMany(Milestone::class)->orderBy('due_on')->orderBy('id');
+    }
+
+    /**
+     * Both modules are required (decision 5), so Projects may know about Tasks.
+     *
+     * @return HasMany<Task, $this>
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 
     public function hasMember(User $user): bool

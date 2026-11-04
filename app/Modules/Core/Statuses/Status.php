@@ -46,6 +46,14 @@ abstract class Status extends Model
      */
     abstract public function reassignTo(self $replacement): void;
 
+    /**
+     * Called after the settings changed the behaviour of this status.
+     */
+    public function categoryChanged(StatusCategory&\BackedEnum $previous): void
+    {
+        //
+    }
+
     protected function casts(): array
     {
         return [

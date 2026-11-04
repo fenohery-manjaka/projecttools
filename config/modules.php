@@ -2,6 +2,7 @@
 
 use App\Modules\Core\CoreModule;
 use App\Modules\Projects\ProjectsModule;
+use App\Modules\Tasks\TasksModule;
 
 return [
 
@@ -19,6 +20,7 @@ return [
     'modules' => [
         CoreModule::class,
         ProjectsModule::class,
+        TasksModule::class,
     ],
 
 ];

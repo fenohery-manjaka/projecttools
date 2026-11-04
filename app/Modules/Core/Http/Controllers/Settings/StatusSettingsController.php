@@ -75,11 +75,17 @@ abstract class StatusSettingsController extends Controller
         $current = $this->find($status);
         $attributes = $this->validated($request);
 
-        if ($attributes['category'] !== $current->category->value) {
+        $previous = $current->category;
+
+        if ($attributes['category'] !== $previous->value) {
             $this->ensureCanLeave($current, 'category');
         }
 
         $current->update($attributes);
+
+        if ($current->category !== $previous) {
+            $current->categoryChanged($previous);
+        }
 
         return $this->back('Statut enregistré.');
     }
