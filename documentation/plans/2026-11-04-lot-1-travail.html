@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Plan · Lot 1 Travail</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;600;700&family=Nunito:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --night: #06142e;
+                --night2: #0e2347;
+                --light: #f5f7fb;
+                --card: #fff;
+                --ink: #0f1b33;
+                --muted: #5b6b85;
+                --line: #dde3ee;
+                --gold: #f2c230;
+                --gold-ink: #7a5a00;
+                --red: #c2413a;
+                --red-bg: #fbe9e7;
+                --green: #1e7a55;
+                --green-bg: #e3f4ec;
+                --amber: #9a6200;
+                --blue: #2457a6;
+                --blue-bg: #e6eefa;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                margin: 0;
+                height: 100%;
+                background: #020a18;
+                font-family: Nunito, system-ui, sans-serif;
+                color: var(--ink);
+            }
+            .deck {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .slide {
+                position: absolute;
+                width: min(1320px, 100vw);
+                height: min(760px, 100vh);
+                padding: 34px 46px 70px;
+                display: none;
+                flex-direction: column;
+                overflow: auto;
+            }
+            .slide.on {
+                display: flex;
+            }
+            .dark {
+                background: var(--night);
+                color: #fff;
+            }
+            .lightbg {
+                background: var(--light);
+            }
+            h1,
+            h2,
+            h3 {
+                font-family: 'IBM Plex Sans', system-ui, sans-serif;
+                margin: 0;
+            }
+            h1 {
+                font-size: 40px;
+                line-height: 1.15;
+            }
+            h2 {
+                font-size: 25px;
+                line-height: 1.2;
+                margin-bottom: 4px;
+            }
+            h3 {
+                font-size: 15px;
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+            .kick {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 12px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--gold);
+                margin-bottom: 8px;
+            }
+            .lightbg .kick {
+                color: var(--gold-ink);
+            }
+            .sub {
+                font-size: 15.5px;
+                color: var(--muted);
+                margin: 0 0 14px;
+                line-height: 1.45;
+            }
+            .dark .sub {
+                color: #afc0dd;
+            }
+            .pills {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-top: 22px;
+            }
+            .pill {
+                padding: 8px 14px;
+                border-radius: 999px;
+                font-size: 14px;
+                font-weight: 600;
+                background: rgba(255, 255, 255, 0.08);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.16);
+            }
+            .pill b {
+                color: var(--gold);
+            }
+            .grid2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            .grid3 {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+            }
+            .card {
+                background: var(--card);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 11px 14px;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            .dark .card {
+                background: var(--night2);
+                border-color: rgba(255, 255, 255, 0.12);
+                color: #e4ecf8;
+            }
+            .card p {
+                margin: 4px 0 0;
+            }
+            .lbl {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 11.5px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                font-weight: 500;
+                margin-bottom: 4px;
+            }
+            .lbl.cause {
+                color: var(--red);
+            }
+            .lbl.sol {
+                color: var(--green);
+            }
+            .diff {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 12px;
+                line-height: 1.7;
+                background: var(--card);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 8px 12px;
+            }
+            .diff div {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .diff i {
+                font-style: normal;
+                display: inline-block;
+                width: 16px;
+                font-weight: 600;
+            }
+            .diff b {
+                font-family: 'IBM Plex Sans', sans-serif;
+                font-size: 12.5px;
+                display: block;
+                margin-top: 6px;
+                color: var(--ink);
+            }
+            .diff b:first-child {
+                margin-top: 0;
+            }
+            .m {
+                color: var(--amber);
+            }
+            .ad {
+                color: var(--green);
+            }
+            .rm {
+                color: var(--red);
+            }
+            .diff span {
+                color: var(--muted);
+                font-family: Nunito, sans-serif;
+                font-size: 12.5px;
+            }
+            .small {
+                font-size: 12.8px;
+                color: var(--muted);
+            }
+            .dark .small {
+                color: #afc0dd;
+            }
+            code {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 12px;
+                background: rgba(36, 87, 166, 0.08);
+                padding: 1px 5px;
+                border-radius: 4px;
+            }
+            .dark code {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 13.5px;
+            }
+            td,
+            th {
+                border-bottom: 1px solid var(--line);
+                padding: 6px 8px;
+                text-align: left;
+                vertical-align: top;
+                line-height: 1.4;
+            }
+            th {
+                font-family: 'IBM Plex Sans', sans-serif;
+                font-size: 12px;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .dark td,
+            .dark th {
+                border-color: rgba(255, 255, 255, 0.12);
+            }
+            .dark th {
+                color: #afc0dd;
+            }
+            .warn {
+                border-left: 4px solid var(--gold);
+                background: #fffbef;
+                padding: 8px 12px;
+                font-size: 13.5px;
+                line-height: 1.45;
+                border-radius: 0 10px 10px 0;
+            }
+            .dark .warn {
+                background: rgba(242, 194, 48, 0.08);
+            }
+            .step {
+                border-radius: 12px;
+                padding: 9px 12px;
+                background: var(--night2);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                font-size: 13.5px;
+                line-height: 1.4;
+                color: #e4ecf8;
+            }
+            .step b {
+                color: var(--gold);
+                display: block;
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 12px;
+                margin-bottom: 3px;
+            }
+            .flow {
+                display: flex;
+                gap: 8px;
+                align-items: stretch;
+                flex-wrap: wrap;
+            }
+            .flow .step {
+                flex: 1;
+                min-width: 170px;
+            }
+            .arrow {
+                align-self: center;
+                color: var(--gold);
+                font-size: 20px;
+            }
+            .screen {
+                background: #e9eef6;
+                border-radius: 12px;
+                padding: 12px;
+                position: relative;
+                min-height: 200px;
+                font-size: 12.5px;
+            }
+            .screen .bar {
+                background: #fff;
+                border-radius: 8px;
+                padding: 6px 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+            .screen .tile {
+                background: #fff;
+                border-radius: 8px;
+                height: 44px;
+                margin-bottom: 6px;
+            }
+            .screen .veil {
+                position: absolute;
+                inset: 0;
+                background: rgba(6, 20, 46, 0.45);
+                border-radius: 12px;
+            }
+            .modal {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(6, 20, 46, 0.25);
+                padding: 12px 14px;
+                width: 72%;
+            }
+            .modal h3 {
+                font-size: 14px;
+            }
+            .field {
+                height: 18px;
+                background: #eef2f8;
+                border-radius: 5px;
+                margin: 6px 0;
+            }
+            .btn {
+                display: inline-block;
+                background: var(--night);
+                color: #fff;
+                border-radius: 6px;
+                padding: 3px 9px;
+                font-weight: 700;
+                font-size: 11.5px;
+            }
+            .url {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 11.5px;
+                color: var(--muted);
+                margin-bottom: 6px;
+            }
+            .check {
+                display: grid;
+                grid-template-columns: 22px 1fr;
+                gap: 10px;
+                align-items: start;
+                font-size: 14.5px;
+                line-height: 1.45;
+                margin-bottom: 9px;
+            }
+            .box {
+                width: 18px;
+                height: 18px;
+                border: 2px solid #24407a;
+                border-radius: 4px;
+                margin-top: 2px;
+            }
+            .dark .box {
+                border-color: var(--gold);
+            }
+            .nope {
+                display: inline-block;
+                background: var(--red-bg);
+                color: var(--red);
+                border-radius: 999px;
+                padding: 6px 13px;
+                font-weight: 700;
+                font-size: 13.5px;
+                margin: 0 6px 8px 0;
+            }
+            .yes {
+                display: inline-block;
+                background: var(--green-bg);
+                color: var(--green);
+                border-radius: 999px;
+                padding: 6px 13px;
+                font-weight: 700;
+                font-size: 13.5px;
+            }
+            .sign {
+                margin-top: auto;
+                border-top: 2px dashed var(--gold);
+                padding-top: 16px;
+                font-size: 20px;
+                font-weight: 700;
+            }
+            .nav {
+                position: fixed;
+                bottom: 14px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                z-index: 5;
+            }
+            .nav button {
+                background: rgba(255, 255, 255, 0.12);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                border-radius: 999px;
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+                cursor: pointer;
+            }
+            #dots {
+                display: flex;
+                gap: 6px;
+            }
+            #dots span {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                cursor: pointer;
+            }
+            #dots span.on {
+                background: var(--gold);
+            }
+            @media (max-width: 760px) {
+                .grid2,
+                .grid3 {
+                    grid-template-columns: 1fr;
+                }
+                .slide {
+                    padding: 22px 16px 70px;
+                }
+                h1 {
+                    font-size: 30px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="deck">
+            <!-- 1 -->
+            <section class="slide dark on">
+                <div class="kick">Plan · gros chantier · 04/11/2026</div>
+                <h1>
+                    Lot 1 « Travail » en entier,<br />et la création toujours
+                    dans une modale
+                </h1>
+                <p class="sub" style="margin-top: 12px; max-width: 820px">
+                    ProjectTools, l'outil de gestion de projets de l'équipe
+                    (Laravel 13 + Inertia/Vue). Le socle (lot 0) est fait ; ce
+                    plan couvre les 15 tickets du lot 1, plus une nouvelle règle
+                    d'écran que tu as demandée.
+                </p>
+                <div class="pills">
+                    <span class="pill"><b>15</b> tickets</span>
+                    <span class="pill"
+                        ><b>1</b> règle nouvelle : créer = modale</span
+                    >
+                    <span class="pill"><b>4</b> tables ajoutées</span>
+                    <span class="pill"><b>0</b> dépendance ajoutée</span>
+                    <span class="pill"
+                        >branche <b>lot-1</b>, un commit par ticket</span
+                    >
+                </div>
+                <p class="small" style="margin-top: auto">
+                    Flèches ← → ou clic sur les points pour naviguer.
+                </p>
+            </section>
+
+            <!-- 2 -->
+            <section class="slide lightbg">
+                <div class="kick">1 · Le problème</div>
+                <h2>
+                    Aujourd'hui, l'équipe ne peut que créer des projets vides
+                </h2>
+                <p class="sub">
+                    Qui : toute l'équipe (Administrateur, Responsable,
+                    Contributeur, Observateur). Où : l'application ProjectTools
+                    en local.
+                </p>
+                <div class="grid2">
+                    <div class="card">
+                        <div class="lbl cause">Ce qui se passe</div>
+                        <p>
+                            L'application a un menu, des rôles et un module
+                            Projets (liste, création, membres).
+                            <b>C'est tout.</b>
+                        </p>
+                        <p>
+                            Pas de tâches, pas de jalons, pas de commentaires,
+                            pas de notifications. L'Accueil est une page vide du
+                            kit de départ, et le Calendrier n'existe pas.
+                        </p>
+                        <p>
+                            Les 15 tickets du lot 1 sont rédigés dans
+                            <code>docs/tickets/lot-1/</code>, mais aucun n'est
+                            commencé.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <div class="lbl cause">Et pour créer</div>
+                        <p>
+                            Créer un projet ouvre
+                            <b>une autre page</b>
+                            (<code>/projects/create</code>) : on quitte la
+                            liste, on remplit, on est renvoyé ailleurs. Les
+                            tickets prévoient la même chose pour les tâches
+                            (<code>/tasks/create</code>).
+                        </p>
+                        <div class="lbl cause" style="margin-top: 10px">
+                            La conséquence
+                        </div>
+                        <p>
+                            L'outil ne sert pas encore au quotidien : l'équipe
+                            suit toujours son travail ailleurs. Et chaque
+                            création casse le fil (on perd la liste, les
+                            filtres, le tableau qu'on regardait).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3 -->
+            <section class="slide lightbg">
+                <div class="kick">2 · Ce que je propose — avant → après</div>
+                <h2>Le travail de tous les jours, dans l'application</h2>
+                <table style="margin-top: 8px">
+                    <tr>
+                        <th style="width: 24%">Écran</th>
+                        <th style="width: 30%">Avant</th>
+                        <th>Après</th>
+                    </tr>
+                    <tr>
+                        <td><b>Projets › un projet</b></td>
+                        <td>Description + membres</td>
+                        <td>
+                            Onglets Aperçu (progression %, prochains jalons,
+                            éléments en attente), Tâches, Jalons, Équipe ;
+                            bouton Archiver
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Projets › liste</b></td>
+                        <td>Cartes simples</td>
+                        <td>
+                            Pastilles de filtre par statut avec compteurs, «
+                            Archivés » ; barre de progression, retards, prochain
+                            jalon sur chaque carte
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Tâches</b> (nouveau)</td>
+                        <td>—</td>
+                        <td>
+                            Liste filtrable (projet, membre, priorité, échéance,
+                            recherche) et tableau Kanban glisser-déposer ; page
+                            tâche avec statut rapide, sous-tâches, commentaires
+                            @mentions
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Mes tâches</b> (nouveau)</td>
+                        <td>—</td>
+                        <td>
+                            Mes tâches ouvertes par urgence (en retard,
+                            aujourd'hui, semaine…), case à cocher, « Ma charge »
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Accueil</b></td>
+                        <td>Page vide</td>
+                        <td>
+                            « Demande une intervention », mes prochaines tâches,
+                            à venir sur 14 jours, projets en cours
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Calendrier</b> (nouveau)</td>
+                        <td>—</td>
+                        <td>
+                            Grille du mois (échéances, jalons, fins de projet),
+                            journée « chargée », en retard, 14 prochains jours
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>En-tête</b></td>
+                        <td>Fil d'Ariane</td>
+                        <td>
+                            + cloche de notifications (mentions), « Tout marquer
+                            comme lu »
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Créer un projet / une tâche</b></td>
+                        <td>Changement de page</td>
+                        <td>
+                            <b>Modale</b> par-dessus l'écran courant (diapo
+                            suivante), et c'est écrit comme norme
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- 4 -->
+            <section class="slide lightbg">
+                <div class="kick">
+                    2 bis · La nouvelle norme : créer dans une modale
+                </div>
+                <h2>On crée sans quitter l'écran qu'on regarde</h2>
+                <div class="grid2" style="margin-top: 6px">
+                    <div>
+                        <h3>Avant</h3>
+                        <div class="screen">
+                            <div class="url">
+                                /projects → /projects/create → /projects/12
+                            </div>
+                            <div class="bar">
+                                <b>Nouveau projet</b
+                                ><span class="small">page entière</span>
+                            </div>
+                            <div class="field"></div>
+                            <div class="field"></div>
+                            <div class="field" style="width: 60%"></div>
+                            <span class="btn">Créer le projet</span>
+                            <p class="small" style="margin-top: 8px">
+                                La liste disparaît ; « retour » ramène à un
+                                formulaire vide.
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Après</h3>
+                        <div class="screen">
+                            <div class="url">
+                                /projects (l'adresse ne change pas)
+                            </div>
+                            <div class="bar">
+                                <b>Projets</b
+                                ><span class="btn">Nouveau projet</span>
+                            </div>
+                            <div class="tile"></div>
+                            <div class="tile"></div>
+                            <div class="tile"></div>
+                            <div class="veil"></div>
+                            <div class="modal">
+                                <h3>Nouveau projet</h3>
+                                <div class="field"></div>
+                                <div class="field"></div>
+                                <div class="field" style="width: 55%"></div>
+                                <span class="btn">Créer</span>
+                                <span class="small">Annuler · Échap</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid3" style="margin-top: 12px">
+                    <div class="card">
+                        <div class="lbl sol">Comment</div>
+                        Composant <code>Dialog</code> déjà présent (reka-ui). Un
+                        composant <code>CreateProjectDialog.vue</code> et un
+                        <code>CreateTaskDialog.vue</code>, réutilisés partout où
+                        il y a un bouton « Nouveau… ».
+                    </div>
+                    <div class="card">
+                        <div class="lbl sol">Données du formulaire</div>
+                        Listes (projets, membres, jalons…) chargées
+                        <b>à l'ouverture</b> de la modale (prop Inertia
+                        <code>optional</code>), pas à chaque page. Erreur de
+                        validation : la modale reste ouverte, la saisie est
+                        gardée.
+                    </div>
+                    <div class="card">
+                        <div class="lbl sol">Après « Créer »</div>
+                        Projet : on arrive sur sa page (il faut le configurer).
+                        Tâche : on <b>reste</b> sur l'écran (liste, Kanban,
+                        projet, accueil) avec le message « Tâche créée ».
+                    </div>
+                </div>
+                <p class="warn" style="margin-top: 12px">
+                    <b>Tranché :</b> la norme vaut pour la <b>création</b> ; la
+                    modification garde sa page (<code>/edit</code>), car tu n'as
+                    parlé que de création. Les pages
+                    <code>projects/create</code> et
+                    <code>tasks/create</code> disparaissent. La règle est écrite
+                    dans <code>docs/conventions.md</code> et
+                    <code>.ai/guidelines/projecttools.md</code>, et les tickets
+                    03 et 14 sont corrigés pour la suivre.
+                </p>
+            </section>
+
+            <!-- 4 ter : ajouté après ton « oui » -->
+            <section class="slide lightbg">
+                <div class="kick">
+                    2 bis · Ajouté après ton « oui » : statuts réglables
+                </div>
+                <h2>
+                    Les statuts des projets et des tâches se créent et se
+                    suppriment
+                </h2>
+                <p class="sub">
+                    Avant : statuts écrits en dur dans le code (5 pour les
+                    projets, 4 pour les tâches). Après : une table par type,
+                    gérée dans Paramètres.
+                </p>
+                <div class="grid3">
+                    <div class="card">
+                        <div class="lbl sol">Où</div>
+                        Paramètres › <b>Statuts des projets</b> et ›
+                        <b>Statuts des tâches</b> (super admin, comme Rôles et
+                        Modules) : ajouter, renommer, couleur, monter/descendre,
+                        supprimer.
+                    </div>
+                    <div class="card">
+                        <div class="lbl sol">Comportement</div>
+                        Chaque statut a un nom libre et un
+                        <b>comportement</b> fixe qui dit ce que l'application en
+                        fait. Tâches : à faire, en cours, bloqué (demande une
+                        raison), terminé (date de fin). Projets : envisagé, en
+                        cours (compté sur l'Accueil), en pause, terminé,
+                        abandonné.
+                    </div>
+                    <div class="card">
+                        <div class="lbl sol">Supprimer</div>
+                        Si des projets ou tâches l'utilisent, on choisit le
+                        statut qui le remplace. Refusé s'il est le dernier « à
+                        faire » ou « terminé » des tâches, ou le dernier statut
+                        des projets.
+                    </div>
+                </div>
+                <p class="warn" style="margin-top: 12px">
+                    <b>Tranché :</b> j'ai compris « les statuts » comme
+                    <b>ceux des tâches et ceux des projets</b>. Les colonnes du
+                    Kanban, les pastilles de filtre et les listes déroulantes
+                    suivent la table, dans l'ordre choisi. Les statuts existants
+                    sont repris tels quels : aucun projet ne change de statut.
+                </p>
+            </section>
+
+            <!-- 5 -->
+            <section class="slide dark">
+                <div class="kick">2 ter · Dans quel ordre</div>
+                <h2>L'ordre du README, la modale des projets en premier</h2>
+                <p class="sub">
+                    Chaque étape = un commit sur la branche <code>lot-1</code>,
+                    avec <code>composer ci:check</code> vert avant de passer à
+                    la suivante.
+                </p>
+                <div class="flow">
+                    <div class="step">
+                        <b>0 · Norme</b>Modale « Nouveau projet », règle écrite
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="step">
+                        <b>01 · 02</b>Jalons ; module Tâches, droits, visibilité
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="step">
+                        <b>03 · 06</b>Page tâche, modale « Nouvelle tâche »,
+                        sous-tâches
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="step">
+                        <b>04 · 05</b>Liste et filtres ; Kanban
+                    </div>
+                </div>
+                <div class="flow" style="margin-top: 10px">
+                    <div class="step">
+                        <b>07 · 08</b>Commentaires et @mentions (noyau), puis
+                        sur les tâches
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="step"><b>09 · 10</b>Cloche ; Mes tâches</div>
+                    <span class="arrow">→</span>
+                    <div class="step">
+                        <b>11 · 12 · 13</b>Points d'extension ; Accueil ;
+                        Calendrier
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="step">
+                        <b>15 · 14</b>Archivage ; page projet complète
+                    </div>
+                </div>
+                <p class="warn" style="margin-top: 16px; color: #e4ecf8">
+                    <b>Tranché :</b> le ticket d'essai 00 (connexion en
+                    français) n'est pas fait : il sert au premier ticket d'un
+                    nouvel arrivant. Les tickets 07 et 11, marqués « expert »,
+                    sont faits avec relecture du noyau et documentés dans
+                    <code>docs/architecture.md</code>. À la fin : pas de push ni
+                    de pull request sans ta demande.
+                </p>
+            </section>
+
+            <!-- 6 -->
+            <section class="slide lightbg">
+                <div class="kick">3 · Je touche</div>
+                <h2>
+                    Exactement les fichiers listés par chaque ticket, plus la
+                    modale
+                </h2>
+                <div class="grid2" style="margin-top: 6px">
+                    <div class="diff">
+                        <b>Norme modale</b>
+                        <div>
+                            <i class="ad">+</i
+                            >resources/js/components/projects/CreateProjectDialog.vue
+                            <span>· formulaire en modale</span>
+                        </div>
+                        <div>
+                            <i class="rm">−</i
+                            >resources/js/pages/projects/Create.vue
+                            <span>· page remplacée</span>
+                        </div>
+                        <div>
+                            <i class="m">~</i>app/Modules/Projects/routes.php
+                            <span>· retire GET create</span>
+                        </div>
+                        <div>
+                            <i class="m">~</i>ProjectController.php
+                            <span>· options en prop optional</span>
+                        </div>
+                        <div>
+                            <i class="m">~</i
+                            >resources/js/pages/projects/Index.vue
+                            <span>· bouton ouvre la modale</span>
+                        </div>
+                        <div>
+                            <i class="m">~</i>docs/conventions.md ·
+                            .ai/guidelines/projecttools.md
+                            <span>· la règle</span>
+                        </div>
+                        <div>
+                            <i class="m">~</i>docs/tickets/lot-1/03 et 14
+                            <span>· suivent la règle</span>
+                        </div>
+                        <b>Projets (01, 14, 15)</b>
+                        <div>
+                            <i class="ad">+</i>Models/Milestone.php,
+                            MilestoneController, ProjectArchiveController
+                        </div>
+                        <div>
+                            <i class="ad">+</i>components/projects/
+                            ProjectMilestones, ProjectTabs, ProjectProgress,
+                            PendingItems, StatusFilter
+                        </div>
+                        <div>
+                            <i class="m">~</i>Project.php, ProjectPolicy.php,
+                            pages/projects/Show.vue
+                            <span>· relations, archivé = lecture seule</span>
+                        </div>
+                        <b>Noyau (07, 09, 11, 12, 13)</b>
+                        <div>
+                            <i class="ad">+</i>Core/Models/Comment.php,
+                            Concerns/HasComments, Actions/PostComment,
+                            DeleteComment
+                        </div>
+                        <div>
+                            <i class="ad">+</i
+                            >Core/Notifications/MentionedInComment,
+                            Policies/NotificationPolicy
+                        </div>
+                        <div>
+                            <i class="ad">+</i>Core/Agenda/ AgendaItem,
+                            AttentionItem, Severity, AgendaItemType
+                        </div>
+                        <div>
+                            <i class="ad">+</i>Core/Http/Controllers/ Home,
+                            Calendar, Notification
+                        </div>
+                        <div>
+                            <i class="m">~</i>Module.php, ModuleRegistry.php
+                            <span>· agenda(), attention()</span>
+                        </div>
+                        <div>
+                            <i class="m">~</i>HandleInertiaRequests.php
+                            <span>· prop différée notifications</span>
+                        </div>
+                        <div>
+                            <i class="m">~</i>routes/web.php
+                            <span>· dashboard → HomeController</span>
+                        </div>
+                    </div>
+                    <div class="diff">
+                        <b>Module Tâches (02 à 06, 08, 10) — tout nouveau</b>
+                        <div>
+                            <i class="ad">+</i>app/Modules/Tasks/TasksModule.php
+                            <span>· clé, droits, menu</span>
+                        </div>
+                        <div>
+                            <i class="ad">+</i>Enums/ TaskStatus, TaskPriority
+                        </div>
+                        <div>
+                            <i class="ad">+</i>Models/ Task, Subtask ·
+                            Policies/TaskPolicy
+                        </div>
+                        <div>
+                            <i class="ad">+</i>Controllers/ Task, TaskStatus,
+                            TaskMove, Subtask, TaskComment, MyTasks
+                        </div>
+                        <div>
+                            <i class="ad">+</i>Actions/ CreateTask, MoveTask ·
+                            Support/ TaskFilters, MyTasks, TaskFormOptions
+                        </div>
+                        <div>
+                            <i class="ad">+</i>Requests/ Task, TaskFilter,
+                            MoveTask, Subtask, …
+                        </div>
+                        <div>
+                            <i class="ad">+</i>pages/tasks/ Index, Show, Edit,
+                            Mine
+                        </div>
+                        <div>
+                            <i class="ad">+</i>components/tasks/
+                            CreateTaskDialog, TaskFields, TaskTable, TaskBoard,
+                            TaskCard, …
+                        </div>
+                        <div>
+                            <i class="m">~</i>config/modules.php ·
+                            database/seeders/RoleSeeder.php
+                        </div>
+                        <b>Pages communes</b>
+                        <div>
+                            <i class="m">~</i>pages/Dashboard.vue
+                            <span>· vrai accueil</span>
+                        </div>
+                        <div>
+                            <i class="ad">+</i>pages/calendar/Index.vue,
+                            components/calendar/, components/home/
+                        </div>
+                        <div>
+                            <i class="ad">+</i
+                            >components/comments/CommentThread.vue,
+                            NotificationBell.vue
+                        </div>
+                        <div>
+                            <i class="m">~</i>AppSidebarHeader.vue,
+                            lib/navigationIcons.ts, types/global.d.ts
+                        </div>
+                        <b>Tests</b>
+                        <div>
+                            <i class="ad">+</i
+                            >tests/Feature/Modules/{Projects,Tasks,Core}/
+                            <span
+                                >· ≈ 20 fichiers, un par écran ou
+                                opération</span
+                            >
+                        </div>
+                        <div>
+                            <i class="m">~</i>tests/Feature/DashboardTest.php ·
+                            ProjectTest (modale)
+                        </div>
+                    </div>
+                </div>
+                <p class="small" style="margin-top: 8px">
+                    Différence avec les tickets :
+                    <code>pages/tasks/Create.vue</code> (ticket 03) devient
+                    <code>components/tasks/CreateTaskDialog.vue</code> +
+                    <code>Support/TaskFormOptions.php</code>, pour suivre la
+                    norme.
+                </p>
+            </section>
+
+            <!-- 7 -->
+            <section class="slide lightbg">
+                <div class="kick">4 · Base de données</div>
+                <h2>6 tables ajoutées, une colonne remplacée</h2>
+                <p class="sub">
+                    Statuts réglables : <code>+ project_statuses</code> et
+                    <code>+ task_statuses</code> (name, color, category,
+                    position) ; <code>projects.status</code> (texte) devient
+                    <code>projects.status_id</code>, valeurs existantes reprises
+                    par la migration ; <code>tasks.status_id</code> au lieu d'un
+                    texte.
+                </p>
+                <div class="grid2" style="margin-top: 6px">
+                    <div class="diff">
+                        <div>
+                            <i class="ad">+</i
+                            ><b style="display: inline">milestones</b>
+                            <span>· ticket 01</span>
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;project_id FK cascade · name(120) ·
+                            due_on date · reached_at? · index(project_id,
+                            due_on)
+                        </div>
+                        <div>
+                            <i class="ad">+</i
+                            ><b style="display: inline">tasks</b>
+                            <span>· ticket 02</span>
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;project_id FK cascade · milestone_id?
+                            nullOnDelete · title(200) · description?
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;status 'todo' index · priority 'normal'
+                            · due_on? index · estimate_hours?
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;blocked_reason? · position 0 ·
+                            completed_at? · created_by? nullOnDelete
+                        </div>
+                        <div>
+                            <i class="ad">+</i
+                            ><b style="display: inline">task_user</b>
+                            <span>· responsables, ticket 02</span>
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;primary(task_id, user_id) · index
+                            user_id
+                        </div>
+                    </div>
+                    <div class="diff">
+                        <div>
+                            <i class="ad">+</i
+                            ><b style="display: inline">subtasks</b>
+                            <span>· ticket 06</span>
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;task_id FK cascade · title(200) ·
+                            done_at? · position · index(task_id, position)
+                        </div>
+                        <div>
+                            <i class="ad">+</i
+                            ><b style="display: inline">comments</b>
+                            <span>· polymorphe, ticket 07</span>
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;commentable morphs · user_id?
+                            nullOnDelete · body text
+                        </div>
+                        <div style="margin-top: 8px">
+                            <i class="m">=</i
+                            ><span
+                                >projects.archived_at et notifications existent
+                                déjà (lot 0)</span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <p class="warn" style="margin-top: 14px">
+                    5 permissions ajoutées : <code>tasks.view</code>,
+                    <code>.create</code>, <code>.update</code>,
+                    <code>.delete</code>, <code>.comment</code>. Sur ta base
+                    locale déjà remplie, je lance
+                    <code>php artisan migrate</code> puis
+                    <code>projecttools:sync-permissions</code>, et je coche les
+                    cases des 4 rôles selon le tableau du README (via le seeder
+                    sur une base neuve, à la main sur l'existante). Aucune
+                    donnée existante n'est effacée.
+                </p>
+            </section>
+
+            <!-- 8 -->
+            <section class="slide lightbg">
+                <div class="kick">5 · Je ne touche pas</div>
+                <h2>Hors de ce chantier</h2>
+                <div style="margin-top: 10px">
+                    <span class="nope">Ticket d'essai 00 (connexion)</span>
+                    <span class="nope"
+                        >Pages de modification (restent des pages)</span
+                    >
+                    <span class="nope">Minuteur, temps passé (lot 3)</span>
+                    <span class="nope"
+                        >Pièces jointes, réunions, décisions (lot 2)</span
+                    >
+                    <span class="nope">Temps réel (WebSocket)</span>
+                    <span class="nope">E-mails de notification</span>
+                    <span class="nope"
+                        >Nouvelle dépendance npm ou Composer</span
+                    >
+                    <span class="nope"
+                        >Paramètres › Rôles, Modules, Membres</span
+                    >
+                    <span class="nope">Push, pull request, GitHub Issues</span>
+                    <span class="nope">Choix MySQL / PostgreSQL</span>
+                </div>
+            </section>
+
+            <!-- 9 -->
+            <section class="slide dark">
+                <div class="kick">6 · Tu sauras que c'est fait</div>
+                <h2>
+                    Les preuves, vérifiées une par une avant de dire « terminé »
+                </h2>
+                <div class="grid2" style="margin-top: 10px">
+                    <div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                ><code>composer ci:check</code> vert à chaque
+                                commit et à la fin (Pint, ESLint, types,
+                                PHPStan, tests)</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                >Chaque critère d'acceptation des 15 tickets
+                                couvert par un test feature (dont les 403, 404
+                                inter-projets, nombre de requêtes borné)</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                ><code>migrate:fresh --seed</code> : les 4 rôles
+                                ont les droits du README</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                >« Nouveau projet » et « Nouvelle tâche »
+                                s'ouvrent en modale, l'adresse ne change pas,
+                                une erreur garde la modale ouverte (test +
+                                navigateur)</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                ><code>GET /projects/create</code> répond 404
+                                (test)</span
+                            >
+                        </div>
+                    </div>
+                    <div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                >Navigateur, compte super admin puis
+                                Contributeur : un parcours complet (projet →
+                                jalon → tâche → Kanban → commentaire @mention →
+                                cloche → Mes tâches → Accueil → Calendrier →
+                                archivage), avec captures</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                >Observateur : tout est en lecture seule
+                                (boutons absents, 403 côté serveur)</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                >Téléphone (375 px) : liste, Kanban, onglets et
+                                calendrier sans débordement de page</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                >Contrôle final :
+                                <code>git diff main --stat</code> ne contient
+                                que des fichiers de ce plan</span
+                            >
+                        </div>
+                        <div class="check">
+                            <span class="box"></span
+                            ><span
+                                >Restitution : un compte rendu HTML dans
+                                <code>documentation/</code> avec les captures et
+                                ce qui reste éventuellement</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10 -->
+            <section class="slide dark">
+                <div class="kick">7 · Ce que j'attends de toi</div>
+                <h2>Un « oui » écrit, ou ce qu'il faut changer</h2>
+                <p class="sub" style="max-width: 820px; margin-top: 10px">
+                    Ensuite je fais les 15 tickets et la norme modale d'une
+                    traite, sans revenir te demander, et je te restitue le tout
+                    avec les preuves.
+                </p>
+                <div class="card" style="max-width: 820px; margin-top: 8px">
+                    <div class="lbl" style="color: var(--gold)">
+                        Ce que j'ai tranché, à corriger si besoin
+                    </div>
+                    <p>
+                        • Modale pour la <b>création</b> seulement ; la
+                        modification reste une page.
+                    </p>
+                    <p>
+                        • Après création d'une tâche on reste sur place ; après
+                        création d'un projet on ouvre sa page.
+                    </p>
+                    <p>
+                        • Branche locale <code>lot-1</code>, un commit par
+                        ticket, pas de push.
+                    </p>
+                    <p>• Ticket d'essai 00 laissé au nouvel arrivant.</p>
+                    <p>
+                        • Statuts réglables pour les tâches <b>et</b> les
+                        projets (ajouté après ton « oui »).
+                    </p>
+                </div>
+                <div class="sign">« oui », ou ce qu'il faut changer</div>
+            </section>
+        </div>
+        <div class="nav">
+            <button id="prev" aria-label="Diapositive précédente">←</button>
+            <div id="dots"></div>
+            <button id="next" aria-label="Diapositive suivante">→</button>
+        </div>
+        <script>
+            const slides = [...document.querySelectorAll('.slide')];
+            let i = 0;
+            const dots = document.getElementById('dots');
+            slides.forEach((_, k) => {
+                const d = document.createElement('span');
+                d.onclick = () => go(k);
+                dots.appendChild(d);
+            });
+            function go(k) {
+                i = Math.max(0, Math.min(slides.length - 1, k));
+                slides.forEach((s, n) => s.classList.toggle('on', n === i));
+                [...dots.children].forEach((d, n) =>
+                    d.classList.toggle('on', n === i),
+                );
+            }
+            document.getElementById('prev').onclick = () => go(i - 1);
+            document.getElementById('next').onclick = () => go(i + 1);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') go(i + 1);
+                if (e.key === 'ArrowLeft') go(i - 1);
+            });
+            go(0);
+        </script>
+    </body>
+</html>

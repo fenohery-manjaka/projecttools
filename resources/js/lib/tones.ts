@@ -18,22 +18,34 @@ export function memberColor(id: number): string {
     return MEMBER_COLORS[Math.abs(id) % MEMBER_COLORS.length];
 }
 
+type Tone = NonNullable<BadgeVariants['variant']>;
+
+const STATUS_TONES: string[] = [
+    'secondary',
+    'info',
+    'warn',
+    'ok',
+    'bad',
+    'accent',
+];
+
 /**
- * Pill colour of a project status, as in the prototype.
+ * Pill colour of a configurable status: its tone is a Badge variant (StatusTone on the server).
  */
-const PROJECT_STATUS_TONES: Record<
-    string,
-    NonNullable<BadgeVariants['variant']>
-> = {
-    planned: 'secondary',
-    active: 'info',
-    paused: 'warn',
-    done: 'ok',
-    abandoned: 'bad',
+export function statusTone(tone: string): Tone {
+    return STATUS_TONES.includes(tone) ? (tone as Tone) : 'default';
+}
+
+/**
+ * Pill colour of a task priority, as in the prototype.
+ */
+const PRIORITY_TONES: Record<string, Tone> = {
+    urgent: 'bad',
+    high: 'warn',
+    normal: 'secondary',
+    low: 'secondary',
 };
 
-export function projectStatusTone(
-    status: string,
-): NonNullable<BadgeVariants['variant']> {
-    return PROJECT_STATUS_TONES[status] ?? 'default';
+export function priorityTone(priority: string): Tone {
+    return PRIORITY_TONES[priority] ?? 'default';
 }

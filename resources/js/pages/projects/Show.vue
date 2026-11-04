@@ -13,17 +13,18 @@ import ProjectMemberController from '@/actions/App/Modules/Projects/Http/Control
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import MemberAvatar from '@/components/MemberAvatar.vue';
+import StatusBadge from '@/components/StatusBadge.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { projectStatusTone } from '@/lib/tones';
 import { edit, index, show } from '@/routes/projects';
+import type { Status } from '@/types';
 
 type Project = {
     id: number;
     name: string;
     description: string | null;
     objectives: string | null;
-    status: { value: string; label: string };
+    status: Status;
     color: string;
     owner: { id: number; name: string };
     starts_on: string | null;
@@ -91,10 +92,7 @@ function removeMember(memberId: number) {
                     <p
                         class="flex flex-wrap items-center gap-2 text-muted-foreground"
                     >
-                        <Badge
-                            :variant="projectStatusTone(project.status.value)"
-                            >{{ project.status.label }}</Badge
-                        >
+                        <StatusBadge :status="project.status" />
                         <span
                             >Responsable : {{ project.owner.name
                             }}<template

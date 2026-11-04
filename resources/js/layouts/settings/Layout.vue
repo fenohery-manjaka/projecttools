@@ -11,6 +11,7 @@ import { edit as editProfile } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
 import { index as members } from '@/routes/settings/members';
 import { index as modules } from '@/routes/settings/modules';
+import { index as projectStatuses } from '@/routes/settings/project-statuses';
 import { index as roles } from '@/routes/settings/roles';
 import type { NavItem } from '@/types';
 
@@ -27,6 +28,7 @@ const sidebarNavItems = computed<NavItem[]>(() => [
         ? [
               { title: 'Rôles et permissions', href: roles() },
               { title: 'Modules', href: modules() },
+              { title: 'Statuts des projets', href: projectStatuses() },
           ]
         : []),
 ]);
@@ -35,7 +37,7 @@ const { isCurrentOrParentUrl } = useCurrentUrl();
 
 // Team and platform pages hold tables: give them more room than the account forms.
 const wide = computed(() =>
-    [members(), roles(), modules()].some((route) =>
+    [members(), roles(), modules(), projectStatuses()].some((route) =>
         isCurrentOrParentUrl(route),
     ),
 );

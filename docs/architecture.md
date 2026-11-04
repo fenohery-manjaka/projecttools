@@ -118,6 +118,17 @@ Construit côté serveur dans [`HandleInertiaRequests`](../app/Http/Middleware/H
 
 Un membre désactivé est déconnecté à sa requête suivante ([`EnsureUserIsActive`](../app/Modules/Core/Http/Middleware/EnsureUserIsActive.php)).
 
+## Statuts réglables
+
+Les statuts des projets et des tâches ne sont pas dans le code : le super admin les ajoute, renomme, colore, réordonne et supprime dans **Paramètres › Statuts des projets** et **› Statuts des tâches**.
+
+- Chaque liste est une table (`project_statuses`, `task_statuses`) dont le modèle étend [`App\Modules\Core\Statuses\Status`](../app/Modules/Core/Statuses/Status.php) : `name`, `tone` (couleur de pastille, [`StatusTone`](../app/Modules/Core/Statuses/StatusTone.php)), `category`, `position`.
+- La **catégorie** (« comportement ») est une énumération du module qui implémente [`StatusCategory`](../app/Modules/Core/Statuses/StatusCategory.php) : c'est elle que le code lit. Exemples : une tâche passée à un statut `done` reçoit `completed_at` ; un statut `blocked` exige une raison ; un projet `done` sans tâche vaut 100 %.
+- `Status::firstOf($category)` donne le premier statut d'une catégorie dans l'ordre choisi (ex. cocher une tâche dans Mes tâches la passe au premier statut « terminé »).
+- `Status::requiredCategories()` liste les catégories qui doivent toujours garder un statut (tâches : à faire et terminé). Le dernier statut d'une liste ne se supprime jamais.
+- Supprimer un statut utilisé demande un statut de remplacement : les éléments y sont déplacés dans la même transaction.
+- L'écran est commun : un module étend [`StatusSettingsController`](../app/Modules/Core/Http/Controllers/Settings/StatusSettingsController.php) (modèle, page, route) et sa page Vue utilise `components/settings/StatusManager.vue`. Ses routes déclarent `->can('administer')`.
+
 ## Créer un module (pas à pas)
 
 1. Copier la forme de `app/Modules/Projects` dans `app/Modules/<Nom>`.

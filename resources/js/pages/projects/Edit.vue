@@ -10,7 +10,7 @@ import { edit, index, show } from '@/routes/projects';
 
 const props = defineProps<{
     project: ProjectFormValues & { id: number; name: string };
-    statuses: { value: string; label: string }[];
+    statuses: { id: number; name: string }[];
     colors: string[];
     owners: { id: number; name: string }[];
 }>();
