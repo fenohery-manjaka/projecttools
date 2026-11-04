@@ -13,6 +13,8 @@ import ProjectMemberController from '@/actions/App/Modules/Projects/Http/Control
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import MemberAvatar from '@/components/MemberAvatar.vue';
+import ProjectMilestones from '@/components/projects/ProjectMilestones.vue';
+import type { ProjectMilestone } from '@/components/projects/ProjectMilestones.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,6 +32,7 @@ type Project = {
     starts_on: string | null;
     ends_on: string | null;
     members: { id: number; name: string; email: string; is_owner: boolean }[];
+    milestones: ProjectMilestone[];
 };
 
 const props = defineProps<{
@@ -142,7 +145,16 @@ function removeMember(memberId: number) {
                 </div>
             </section>
 
-            <section class="panel space-y-3.5 p-5">
+            <ProjectMilestones
+                class="lg:col-start-1"
+                :project-id="project.id"
+                :milestones="project.milestones"
+                :can-manage="can.update"
+            />
+
+            <section
+                class="panel space-y-3.5 p-5 lg:col-start-2 lg:row-span-2 lg:row-start-1"
+            >
                 <div class="flex items-center justify-between gap-2">
                     <Heading variant="small" title="Membres" />
                     <span class="text-[13px] text-muted-foreground">{{

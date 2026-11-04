@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Modules\Core\Actions\RecordActivity;
 use App\Modules\Projects\Actions\CreateProject;
 use App\Modules\Projects\Http\Requests\ProjectRequest;
+use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\ProjectStatus;
 use Illuminate\Http\RedirectResponse;
@@ -60,7 +61,7 @@ class ProjectController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $project->load(['owner:id,name', 'status', 'members' => fn ($query) => $query->select('users.id', 'users.name', 'users.email')->orderBy('name')]);
+        $project->load(['owner:id,name', 'status', 'milestones', 'members' => fn ($query) => $query->select('users.id', 'users.name', 'users.email')->orderBy('name')]);
 
         $canManageMembers = $user->can('manageMembers', $project);
 
@@ -74,6 +75,13 @@ class ProjectController extends Controller
                     'name' => $member->name,
                     'email' => $member->email,
                     'is_owner' => $member->id === $project->owner_id,
+                ]),
+                'milestones' => $project->milestones->map(fn (Milestone $milestone): array => [
+                    'id' => $milestone->id,
+                    'name' => $milestone->name,
+                    'due_on' => $milestone->due_on->toDateString(),
+                    'reached' => $milestone->reached_at !== null,
+                    'is_overdue' => $milestone->is_overdue,
                 ]),
             ],
             'availableMembers' => $canManageMembers
