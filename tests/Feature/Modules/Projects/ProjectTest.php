@@ -4,8 +4,9 @@ namespace Tests\Feature\Modules\Projects;
 
 use App\Models\User;
 use App\Modules\Core\Models\ActivityLog;
-use App\Modules\Projects\Enums\ProjectStatus;
+use App\Modules\Projects\Enums\ProjectStatusCategory;
 use App\Modules\Projects\Models\Project;
+use App\Modules\Projects\Models\ProjectStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\Modules\Core\InteractsWithModules;
 use Tests\TestCase;
@@ -32,16 +33,47 @@ class ProjectTest extends TestCase
 
         $project = Project::query()->firstOrFail();
 
-        $this->assertSame(ProjectStatus::Active, $project->status);
+        $this->assertSame(ProjectStatusCategory::Active, $project->status->category);
         $this->assertEqualsCanonicalizing([$creator->id, $owner->id], $project->members()->pluck('users.id')->all());
         $this->assertTrue(ActivityLog::query()->where('subject_id', $project->id)->where('user_id', $creator->id)->exists());
     }
 
-    public function test_validation_rejects_an_end_before_the_start_and_an_unknown_color(): void
+    public function test_validation_rejects_an_end_before_the_start_an_unknown_color_and_status(): void
     {
         $this->actingAs($this->userWithRole('Responsable'))
-            ->post(route('projects.store'), $this->payload(['starts_on' => '2026-11-10', 'ends_on' => '2026-11-01', 'color' => '#000000']))
-            ->assertSessionHasErrors(['ends_on', 'color']);
+            ->post(route('projects.store'), $this->payload(['starts_on' => '2026-11-10', 'ends_on' => '2026-11-01', 'color' => '#000000', 'status_id' => 999]))
+            ->assertSessionHasErrors(['ends_on', 'color', 'status_id']);
+    }
+
+    public function test_creation_happens_in_a_dialog_of_the_list_whose_options_load_on_demand(): void
+    {
+        $user = $this->userWithRole('Responsable');
+
+        $this->actingAs($user)->get('/projects/create')->assertNotFound();
+
+        $page = $this->actingAs($user)->get(route('projects.index'))->viewData('page');
+        $this->assertArrayNotHasKey('projectForm', $page['props']);
+
+        $this->actingAs($user)
+            ->get(route('projects.index'), [
+                'X-Inertia' => 'true',
+                'X-Inertia-Version' => (string) $page['version'],
+                'X-Inertia-Partial-Component' => 'projects/Index',
+                'X-Inertia-Partial-Data' => 'projectForm',
+            ])
+            ->assertOk()
+            ->assertJsonPath('props.projectForm.defaults.owner_id', $user->id)
+            ->assertJsonPath('props.projectForm.defaults.status_id', ProjectStatus::default()->id)
+            ->assertJsonCount(ProjectStatus::query()->count(), 'props.projectForm.statuses');
+    }
+
+    public function test_a_failed_creation_comes_back_to_the_list_with_its_errors(): void
+    {
+        $this->actingAs($this->userWithRole('Responsable'))
+            ->from(route('projects.index'))
+            ->post(route('projects.store'), $this->payload(['name' => '']))
+            ->assertRedirect(route('projects.index'))
+            ->assertSessionHasErrors('name');
     }
 
     public function test_the_list_only_shows_the_projects_the_user_belongs_to(): void
@@ -105,7 +137,7 @@ class ProjectTest extends TestCase
             'name' => 'Site vitrine',
             'description' => 'Présenter nos activités.',
             'objectives' => "Mettre en ligne 6 pages\nObtenir des contacts",
-            'status' => ProjectStatus::Active->value,
+            'status_id' => ProjectStatus::firstOf(ProjectStatusCategory::Active)?->id,
             'owner_id' => User::factory()->create()->id,
             'color' => Project::COLORS[1],
             'starts_on' => '2026-11-01',

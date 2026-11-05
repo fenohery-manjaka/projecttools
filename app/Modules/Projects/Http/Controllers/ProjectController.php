@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Core\Actions\RecordActivity;
 use App\Modules\Projects\Actions\CreateProject;
-use App\Modules\Projects\Enums\ProjectStatus;
 use App\Modules\Projects\Http\Requests\ProjectRequest;
+use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
+use App\Modules\Projects\Models\ProjectStatus;
+use App\Modules\Tasks\Models\Task;
+use App\Modules\Tasks\Support\TaskFormOptions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -24,7 +27,7 @@ class ProjectController extends Controller
         $projects = Project::query()
             ->visibleTo($user)
             ->whereNull('archived_at')
-            ->with('owner:id,name')
+            ->with(['owner:id,name', 'status'])
             ->withCount('members')
             ->latest()
             ->get();
@@ -35,17 +38,11 @@ class ProjectController extends Controller
                 'members_count' => $project->members_count,
             ]),
             'can' => ['create' => $user->can('create', Project::class)],
-        ]);
-    }
-
-    public function create(Request $request): Response
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        return Inertia::render('projects/Create', [
-            ...$this->formOptions(),
-            'defaults' => ['owner_id' => $user->id, 'color' => Project::COLORS[0], 'status' => ProjectStatus::Planned->value],
+            // Loaded when the "New project" dialog opens (docs/conventions.md, « Créer dans une modale »).
+            'projectForm' => Inertia::optional(fn (): array => [
+                ...$this->formOptions(),
+                'defaults' => ['owner_id' => $user->id, 'color' => Project::COLORS[0], 'status_id' => ProjectStatus::default()->id],
+            ]),
         ]);
     }
 
@@ -61,12 +58,12 @@ class ProjectController extends Controller
         return to_route('projects.show', $project);
     }
 
-    public function show(Request $request, Project $project): Response
+    public function show(Request $request, Project $project, TaskFormOptions $taskFormOptions): Response
     {
         /** @var User $user */
         $user = $request->user();
 
-        $project->load(['owner:id,name', 'members' => fn ($query) => $query->select('users.id', 'users.name', 'users.email')->orderBy('name')]);
+        $project->load(['owner:id,name', 'status', 'milestones', 'members' => fn ($query) => $query->select('users.id', 'users.name', 'users.email')->orderBy('name')]);
 
         $canManageMembers = $user->can('manageMembers', $project);
 
@@ -81,6 +78,13 @@ class ProjectController extends Controller
                     'email' => $member->email,
                     'is_owner' => $member->id === $project->owner_id,
                 ]),
+                'milestones' => $project->milestones->map(fn (Milestone $milestone): array => [
+                    'id' => $milestone->id,
+                    'name' => $milestone->name,
+                    'due_on' => $milestone->due_on->toDateString(),
+                    'reached' => $milestone->reached_at !== null,
+                    'is_overdue' => $milestone->is_overdue,
+                ]),
             ],
             'availableMembers' => $canManageMembers
                 ? User::query()
@@ -93,7 +97,9 @@ class ProjectController extends Controller
                 'update' => $user->can('update', $project),
                 'delete' => $user->can('delete', $project),
                 'manageMembers' => $canManageMembers,
+                'createTask' => $user->can('create', [Task::class, $project]),
             ],
+            'taskForm' => Inertia::optional(fn (): array => $taskFormOptions->for($user, $project)),
         ]);
     }
 
@@ -106,7 +112,7 @@ class ProjectController extends Controller
                 'name' => $project->name,
                 'description' => $project->description,
                 'objectives' => $project->objectives,
-                'status' => $project->status->value,
+                'status_id' => $project->status_id,
                 'owner_id' => $project->owner_id,
                 'color' => $project->color,
                 'starts_on' => $project->starts_on?->toDateString(),
@@ -147,7 +153,7 @@ class ProjectController extends Controller
             'id' => $project->id,
             'name' => $project->name,
             'description' => $project->description,
-            'status' => ['value' => $project->status->value, 'label' => $project->status->label()],
+            'status' => $project->status->toSummary(),
             'color' => $project->color,
             'owner' => ['id' => $project->owner->id, 'name' => $project->owner->name],
             'ends_on' => $project->ends_on?->toDateString(),
@@ -160,7 +166,7 @@ class ProjectController extends Controller
     private function formOptions(): array
     {
         return [
-            'statuses' => ProjectStatus::options(),
+            'statuses' => ProjectStatus::query()->ordered()->get(['id', 'name']),
             'colors' => Project::COLORS,
             'owners' => User::query()->whereNull('deactivated_at')->orderBy('name')->get(['id', 'name']),
         ];

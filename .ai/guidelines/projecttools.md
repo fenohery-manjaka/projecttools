@@ -9,6 +9,8 @@ Internal project-management platform. Read `docs/architecture.md` and `docs/conv
 - Module routes live in `app/Modules/<Name>/routes.php`. They are loaded automatically inside `web`, `auth`, `verified` and `module:<key>`. Do not register them elsewhere.
 - Migrations go in `app/Modules/<Name>/Database/Migrations`, factories in `Database/Factories`. Bind them to the model with `#[UseFactory]`, and the policy with `#[UsePolicy]`.
 - Inertia pages go in `resources/js/pages/<module>/`. Use Wayfinder imports (`@/actions/...`, `@/routes/...`), never hard-coded URLs.
+- **Creating** anything (project, task, idea…) happens in a dialog over the current screen, never on a `…/create` page: no `GET …/create` route, form options sent as an `Inertia::optional()` prop loaded when the dialog opens, dialog built on `resources/js/components/FormDialog.vue`. Editing keeps its `…/edit` page. See `docs/conventions.md`, « Créer dans une modale ».
+- Statuses are never hard-coded: project and task statuses are database rows (`ProjectStatus`, `TaskStatus` models) managed in the settings. Code relies on their `category` (behaviour), never on their name or id.
 
 ## Authorization
 

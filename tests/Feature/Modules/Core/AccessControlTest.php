@@ -30,7 +30,7 @@ class AccessControlTest extends TestCase
 
         $this->get(route('projects.index'))->assertOk();
         $this->get(route('projects.show', $project))->assertOk();
-        $this->get(route('projects.create'))->assertOk();
+        $this->get(route('settings.project-statuses.index'))->assertOk();
         $this->get(route('settings.roles.index'))->assertOk();
         $this->get(route('settings.modules.index'))->assertOk();
         $this->get(route('settings.members.index'))->assertOk();
@@ -49,7 +49,6 @@ class AccessControlTest extends TestCase
         $this->actingAs($this->userWithPermissions('projects.view'));
 
         $this->get(route('projects.index'))->assertOk();
-        $this->get(route('projects.create'))->assertForbidden();
         $this->post(route('projects.store'), [])->assertForbidden();
     }
 

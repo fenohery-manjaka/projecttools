@@ -30,6 +30,25 @@ npm run check:fix
 - **Autorisation** : sur la route avec `->can(...)`, la logique dans la policy. Jamais de vérification de rôle par son nom (`hasRole('Responsable')`) : on vérifie une permission.
 - **Pages Inertia** : `resources/js/pages/<module>/`. Les liens et formulaires passent par Wayfinder (`@/actions/...`, `@/routes/...`), jamais une URL écrite en dur.
 - **Requêtes** : charger les relations dont la page a besoin (`with`, `withCount`), pas de requête dans une boucle.
+- **Statuts** : jamais écrits en dur. Les statuts de projet et de tâche sont des lignes en base (`project_statuses`, `task_statuses`), réglées dans Paramètres. Le code s'appuie sur leur **comportement** (`category` : terminé, bloqué…), jamais sur leur nom ni leur identifiant. Voir `docs/architecture.md`, « Statuts réglables ».
+
+## Créer dans une modale
+
+**Règle** : créer un élément (projet, tâche, et tout nouvel élément des lots suivants) se fait dans une **modale ouverte par-dessus l'écran courant**, jamais sur une page `…/create`. On ne perd ni la liste, ni les filtres, ni le tableau qu'on regardait. La **modification** garde sa page (`…/{id}/edit`).
+
+Comment faire :
+
+1. Pas de route `GET …/create`. La page qui porte le bouton « Nouveau… » envoie les options du formulaire (listes de projets, de membres…) dans une prop **optionnelle**, chargée seulement à l'ouverture :
+
+    ```php
+    'taskForm' => Inertia::optional(fn (): array => $taskFormOptions->for($user)),
+    ```
+
+2. Côté Vue, la modale s'appuie sur [`FormDialog.vue`](../resources/js/components/FormDialog.vue) (titre, chargement des options, défilement sur petit écran) et contient un `<Form>` Wayfinder. Exemples : [`CreateProjectDialog.vue`](../resources/js/components/projects/CreateProjectDialog.vue), `CreateTaskDialog.vue`.
+3. Une erreur de validation garde la modale ouverte avec la saisie (le `<Form>` préserve l'état de la page).
+4. Après succès : rester sur l'écran courant (`back()` + message), sauf si l'élément créé demande d'être configuré tout de suite (un projet ouvre sa page).
+5. Test : la route `…/create` répond 404, et la prop optionnelle n'est envoyée qu'à la demande (voir `ProjectTest`).
+
 - **Migrations** : dans `app/Modules/<Nom>/Database/Migrations`, clés étrangères avec `constrained()`.
 
 ## Tests

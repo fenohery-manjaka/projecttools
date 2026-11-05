@@ -7,20 +7,25 @@ export type ProjectFormValues = {
     name?: string;
     description?: string | null;
     objectives?: string | null;
-    status: string;
+    status_id: number;
     owner_id: number;
     color: string;
     starts_on?: string | null;
     ends_on?: string | null;
 };
 
-defineProps<{
+export type ProjectFormOptions = {
     values: ProjectFormValues;
-    statuses: { value: string; label: string }[];
+    statuses: { id: number; name: string }[];
     colors: string[];
     owners: { id: number; name: string }[];
-    errors: Record<string, string | undefined>;
-}>();
+};
+
+defineProps<
+    ProjectFormOptions & {
+        errors: Record<string, string | undefined>;
+    }
+>();
 </script>
 
 <template>
@@ -56,18 +61,18 @@ defineProps<{
 
     <div class="grid gap-4 sm:grid-cols-2">
         <div class="grid gap-2">
-            <Label for="status">Statut</Label>
-            <select id="status" name="status" class="control">
+            <Label for="status_id">Statut</Label>
+            <select id="status_id" name="status_id" class="control">
                 <option
                     v-for="status in statuses"
-                    :key="status.value"
-                    :value="status.value"
-                    :selected="status.value === values.status"
+                    :key="status.id"
+                    :value="status.id"
+                    :selected="status.id === values.status_id"
                 >
-                    {{ status.label }}
+                    {{ status.name }}
                 </option>
             </select>
-            <InputError :message="errors.status" />
+            <InputError :message="errors.status_id" />
         </div>
         <div class="grid gap-2">
             <Label for="owner_id">Responsable</Label>

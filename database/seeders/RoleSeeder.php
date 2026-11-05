@@ -23,14 +23,17 @@ class RoleSeeder extends Seeder
         'Responsable' => [
             'members.view',
             'projects.view', 'projects.view-all', 'projects.create', 'projects.update', 'projects.manage-members',
+            'tasks.view', 'tasks.create', 'tasks.update', 'tasks.delete', 'tasks.comment',
         ],
         'Contributeur' => [
             'members.view',
             'projects.view',
+            'tasks.view', 'tasks.create', 'tasks.update', 'tasks.comment',
         ],
         'Observateur' => [
             'members.view',
             'projects.view',
+            'tasks.view', 'tasks.comment',
         ],
     ];
 

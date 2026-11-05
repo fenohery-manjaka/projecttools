@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { Plus } from '@lucide/vue';
+import { ref } from 'vue';
 import Heading from '@/components/Heading.vue';
 import MemberAvatar from '@/components/MemberAvatar.vue';
-import { Badge } from '@/components/ui/badge';
+import CreateProjectDialog from '@/components/projects/CreateProjectDialog.vue';
+import type { ProjectFormOptions } from '@/components/projects/ProjectFields.vue';
+import StatusBadge from '@/components/StatusBadge.vue';
 import { Button } from '@/components/ui/button';
-import { projectStatusTone } from '@/lib/tones';
-import { create, index, show } from '@/routes/projects';
+import { index, show } from '@/routes/projects';
+import type { Status } from '@/types';
 
 type ProjectSummary = {
     id: number;
     name: string;
     description: string | null;
-    status: { value: string; label: string };
+    status: Status;
     color: string;
     owner: { id: number; name: string };
     ends_on: string | null;
@@ -22,7 +25,12 @@ type ProjectSummary = {
 defineProps<{
     projects: ProjectSummary[];
     can: { create: boolean };
+    projectForm?: Omit<ProjectFormOptions, 'values'> & {
+        defaults: ProjectFormOptions['values'];
+    };
 }>();
+
+const creating = ref(false);
 
 defineOptions({
     layout: {
@@ -47,10 +55,16 @@ const formatDate = (date: string) =>
                 title="Projets"
                 description="Les projets dont vous êtes membre, ou tous selon vos droits."
             />
-            <Button v-if="can.create" as-child>
-                <Link :href="create()"><Plus />Nouveau projet</Link>
-            </Button>
+            <Button v-if="can.create" @click="creating = true"
+                ><Plus />Nouveau projet</Button
+            >
         </div>
+
+        <CreateProjectDialog
+            v-if="can.create"
+            v-model:open="creating"
+            :options="projectForm"
+        />
 
         <p v-if="projects.length === 0" class="empty-state">
             Aucun projet pour l’instant.
@@ -74,9 +88,7 @@ const formatDate = (date: string) =>
                         aria-hidden="true"
                         >{{ project.name[0] }}</span
                     >
-                    <Badge :variant="projectStatusTone(project.status.value)">{{
-                        project.status.label
-                    }}</Badge>
+                    <StatusBadge :status="project.status" />
                 </div>
                 <div class="space-y-1">
                     <h3 class="text-[17px]">{{ project.name }}</h3>

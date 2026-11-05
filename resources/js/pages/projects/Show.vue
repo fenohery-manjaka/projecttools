@@ -7,35 +7,49 @@ import {
     setLayoutProps,
     usePage,
 } from '@inertiajs/vue3';
-import { watchEffect } from 'vue';
+import { Plus } from '@lucide/vue';
+import { ref, watchEffect } from 'vue';
 import ProjectController from '@/actions/App/Modules/Projects/Http/Controllers/ProjectController';
 import ProjectMemberController from '@/actions/App/Modules/Projects/Http/Controllers/ProjectMemberController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import MemberAvatar from '@/components/MemberAvatar.vue';
+import ProjectMilestones from '@/components/projects/ProjectMilestones.vue';
+import type { ProjectMilestone } from '@/components/projects/ProjectMilestones.vue';
+import StatusBadge from '@/components/StatusBadge.vue';
+import CreateTaskDialog from '@/components/tasks/CreateTaskDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { projectStatusTone } from '@/lib/tones';
 import { edit, index, show } from '@/routes/projects';
+import type { Status, TaskFormOptions } from '@/types';
 
 type Project = {
     id: number;
     name: string;
     description: string | null;
     objectives: string | null;
-    status: { value: string; label: string };
+    status: Status;
     color: string;
     owner: { id: number; name: string };
     starts_on: string | null;
     ends_on: string | null;
     members: { id: number; name: string; email: string; is_owner: boolean }[];
+    milestones: ProjectMilestone[];
 };
 
 const props = defineProps<{
     project: Project;
     availableMembers: { id: number; name: string }[];
-    can: { update: boolean; delete: boolean; manageMembers: boolean };
+    can: {
+        update: boolean;
+        delete: boolean;
+        manageMembers: boolean;
+        createTask: boolean;
+    };
+    taskForm?: TaskFormOptions;
 }>();
+
+const creatingTask = ref(false);
 
 const page = usePage();
 
@@ -91,10 +105,7 @@ function removeMember(memberId: number) {
                     <p
                         class="flex flex-wrap items-center gap-2 text-muted-foreground"
                     >
-                        <Badge
-                            :variant="projectStatusTone(project.status.value)"
-                            >{{ project.status.label }}</Badge
-                        >
+                        <StatusBadge :status="project.status" />
                         <span
                             >Responsable : {{ project.owner.name
                             }}<template
@@ -108,6 +119,9 @@ function removeMember(memberId: number) {
                 </div>
             </div>
             <div class="flex gap-2">
+                <Button v-if="can.createTask" @click="creatingTask = true"
+                    ><Plus />Nouvelle tâche</Button
+                >
                 <Button v-if="can.update" variant="outline" as-child>
                     <Link :href="edit(project.id)">Modifier</Link>
                 </Button>
@@ -116,6 +130,12 @@ function removeMember(memberId: number) {
                 >
             </div>
         </div>
+
+        <CreateTaskDialog
+            v-if="can.createTask"
+            v-model:open="creatingTask"
+            :options="taskForm"
+        />
 
         <div class="grid items-start gap-4 lg:grid-cols-[2fr_1fr]">
             <section class="panel space-y-5 p-5">
@@ -144,7 +164,16 @@ function removeMember(memberId: number) {
                 </div>
             </section>
 
-            <section class="panel space-y-3.5 p-5">
+            <ProjectMilestones
+                class="lg:col-start-1"
+                :project-id="project.id"
+                :milestones="project.milestones"
+                :can-manage="can.update"
+            />
+
+            <section
+                class="panel space-y-3.5 p-5 lg:col-start-2 lg:row-span-2 lg:row-start-1"
+            >
                 <div class="flex items-center justify-between gap-2">
                     <Heading variant="small" title="Membres" />
                     <span class="text-[13px] text-muted-foreground">{{

@@ -4,8 +4,8 @@ namespace App\Modules\Projects\Models;
 
 use App\Models\User;
 use App\Modules\Projects\Database\Factories\ProjectFactory;
-use App\Modules\Projects\Enums\ProjectStatus;
 use App\Modules\Projects\Policies\ProjectPolicy;
+use App\Modules\Tasks\Models\Task;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -22,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string|null $description
  * @property string|null $objectives
+ * @property int $status_id
  * @property ProjectStatus $status
  * @property int $owner_id
  * @property string $color
@@ -31,7 +33,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'description', 'objectives', 'status', 'owner_id', 'color', 'starts_on', 'ends_on'])]
+#[Fillable(['name', 'description', 'objectives', 'status_id', 'owner_id', 'color', 'starts_on', 'ends_on'])]
 #[UseFactory(ProjectFactory::class)]
 #[UsePolicy(ProjectPolicy::class)]
 class Project extends Model
@@ -47,11 +49,18 @@ class Project extends Model
     protected function casts(): array
     {
         return [
-            'status' => ProjectStatus::class,
             'starts_on' => 'date',
             'ends_on' => 'date',
             'archived_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @return BelongsTo<ProjectStatus, $this>
+     */
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(ProjectStatus::class, 'status_id');
     }
 
     /**
@@ -68,6 +77,24 @@ class Project extends Model
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<Milestone, $this>
+     */
+    public function milestones(): HasMany
+    {
+        return $this->hasMany(Milestone::class)->orderBy('due_on')->orderBy('id');
+    }
+
+    /**
+     * Both modules are required (decision 5), so Projects may know about Tasks.
+     *
+     * @return HasMany<Task, $this>
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 
     public function hasMember(User $user): bool
