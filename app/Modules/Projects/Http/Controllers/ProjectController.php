@@ -10,6 +10,8 @@ use App\Modules\Projects\Http\Requests\ProjectRequest;
 use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\ProjectStatus;
+use App\Modules\Tasks\Models\Task;
+use App\Modules\Tasks\Support\TaskFormOptions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -56,7 +58,7 @@ class ProjectController extends Controller
         return to_route('projects.show', $project);
     }
 
-    public function show(Request $request, Project $project): Response
+    public function show(Request $request, Project $project, TaskFormOptions $taskFormOptions): Response
     {
         /** @var User $user */
         $user = $request->user();
@@ -95,7 +97,9 @@ class ProjectController extends Controller
                 'update' => $user->can('update', $project),
                 'delete' => $user->can('delete', $project),
                 'manageMembers' => $canManageMembers,
+                'createTask' => $user->can('create', [Task::class, $project]),
             ],
+            'taskForm' => Inertia::optional(fn (): array => $taskFormOptions->for($user, $project)),
         ]);
     }
 

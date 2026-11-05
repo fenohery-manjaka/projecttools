@@ -21,19 +21,19 @@ const open = defineModel<boolean>('open', { default: false });
         title="Nouveau projet"
         description="Sa page s’ouvre ensuite pour ajouter membres, jalons et tâches."
         options-prop="projectForm"
-        :ready="options !== undefined"
+        :options="options"
+        v-slot="{ options: form }"
     >
         <Form
-            v-if="options"
             v-bind="ProjectController.store.form()"
             class="space-y-6"
             v-slot="{ errors, processing }"
         >
             <ProjectFields
-                :values="options.defaults"
-                :statuses="options.statuses"
-                :colors="options.colors"
-                :owners="options.owners"
+                :values="form.defaults"
+                :statuses="form.statuses"
+                :colors="form.colors"
+                :owners="form.owners"
                 :errors="errors"
             />
             <div class="flex justify-end gap-2">

@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends object">
 import { router } from '@inertiajs/vue3';
-import { watch } from 'vue';
+import { shallowRef, watch } from 'vue';
 import {
     Dialog,
     DialogDescription,
@@ -20,14 +20,31 @@ const props = defineProps<{
     description?: string;
     /** Name of the optional prop holding the form options. */
     optionsProp: string;
-    /** True once that prop has been received. */
-    ready: boolean;
+    /** That prop, undefined until it has been loaded. */
+    options?: T;
+}>();
+
+defineSlots<{
+    default(props: { options: T }): unknown;
 }>();
 
 const open = defineModel<boolean>('open', { default: false });
 
+// A failed submission reloads the page without the optional prop: keep the options
+// received, so the form (and what the user typed) stays on screen with its errors.
+const loaded = shallowRef<T | undefined>(props.options);
+
+watch(
+    () => props.options,
+    (options) => {
+        if (options !== undefined) {
+            loaded.value = options;
+        }
+    },
+);
+
 watch(open, (isOpen) => {
-    if (isOpen && !props.ready) {
+    if (isOpen && loaded.value === undefined) {
         router.reload({ only: [props.optionsProp] });
     }
 });
@@ -43,7 +60,7 @@ watch(open, (isOpen) => {
                 }}</DialogDescription>
             </DialogHeader>
 
-            <slot v-if="ready" />
+            <slot v-if="loaded" :options="loaded" />
             <p
                 v-else
                 class="flex items-center gap-2 py-6 text-muted-foreground"
