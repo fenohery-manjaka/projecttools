@@ -125,7 +125,10 @@ function destroy() {
                 <dl class="grid gap-3.5 text-sm">
                     <div>
                         <dt class="text-muted-foreground">Responsables</dt>
-                        <dd v-if="task.assignees.length" class="mt-1.5 space-y-1.5">
+                        <dd
+                            v-if="task.assignees.length"
+                            class="mt-1.5 space-y-1.5"
+                        >
                             <span
                                 v-for="assignee in task.assignees"
                                 :key="assignee.id"
@@ -160,7 +163,9 @@ function destroy() {
                         <dd class="mt-1">
                             <template v-if="task.milestone"
                                 >{{ task.milestone.name }} ·
-                                {{ formatDate(task.milestone.due_on) }}</template
+                                {{
+                                    formatDate(task.milestone.due_on)
+                                }}</template
                             >
                             <template v-else>Aucun</template>
                         </dd>

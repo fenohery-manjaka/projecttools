@@ -14,11 +14,15 @@ use Illuminate\Support\Facades\Route;
 // No "tasks/create" page: tasks are created in a dialog (docs/conventions.md).
 // The project comes from the request, so TaskRequest checks "create" on it.
 Route::post('tasks', [TaskController::class, 'store'])->can('viewAny', Task::class)->name('tasks.store');
-Route::get('tasks/{task}', [TaskController::class, 'show'])->can('view', 'task')->whereNumber('task')->name('tasks.show');
-Route::get('tasks/{task}/edit', [TaskController::class, 'edit'])->can('update', 'task')->name('tasks.edit');
-Route::put('tasks/{task}', [TaskController::class, 'update'])->can('update', 'task')->name('tasks.update');
-Route::patch('tasks/{task}/status', [TaskStatusController::class, 'update'])->can('update', 'task')->name('tasks.status.update');
-Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->can('delete', 'task')->name('tasks.destroy');
+
+// {task} is numeric, so "tasks/create" and friends answer 404 instead of 405.
+Route::where(['task' => '[0-9]+'])->group(function () {
+    Route::get('tasks/{task}', [TaskController::class, 'show'])->can('view', 'task')->name('tasks.show');
+    Route::get('tasks/{task}/edit', [TaskController::class, 'edit'])->can('update', 'task')->name('tasks.edit');
+    Route::put('tasks/{task}', [TaskController::class, 'update'])->can('update', 'task')->name('tasks.update');
+    Route::patch('tasks/{task}/status', [TaskStatusController::class, 'update'])->can('update', 'task')->name('tasks.status.update');
+    Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->can('delete', 'task')->name('tasks.destroy');
+});
 
 // Settings › Task statuses, reserved to the super admin like roles and modules.
 Route::prefix('settings/task-statuses')->name('settings.task-statuses.')->controller(TaskStatusSettingsController::class)->group(function () {
