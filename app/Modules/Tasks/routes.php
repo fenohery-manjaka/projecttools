@@ -5,6 +5,7 @@
 | Every route declares its access check with ->can() — a test fails otherwise.
 */
 
+use App\Modules\Tasks\Http\Controllers\MyTasksController;
 use App\Modules\Tasks\Http\Controllers\Settings\TaskStatusController as TaskStatusSettingsController;
 use App\Modules\Tasks\Http\Controllers\SubtaskController;
 use App\Modules\Tasks\Http\Controllers\TaskController;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 // No "tasks/create" page: tasks are created in a dialog (docs/conventions.md).
 // The project comes from the request, so TaskRequest checks "create" on it.
+Route::get('my-tasks', [MyTasksController::class, 'index'])->can('viewAny', Task::class)->name('tasks.mine');
 Route::get('tasks', [TaskController::class, 'index'])->can('viewAny', Task::class)->name('tasks.index');
 Route::post('tasks', [TaskController::class, 'store'])->can('viewAny', Task::class)->name('tasks.store');
 

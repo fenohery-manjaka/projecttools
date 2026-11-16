@@ -49,6 +49,15 @@ class TasksModule extends Module
     {
         return [
             new NavigationItem(
+                title: 'Mes tâches',
+                route: 'tasks.mine',
+                icon: 'CircleCheck',
+                group: NavigationGroup::Work,
+                ability: 'viewAny',
+                abilityArguments: [Task::class],
+                order: 15,
+            ),
+            new NavigationItem(
                 title: 'Tâches',
                 route: 'tasks.index',
                 icon: 'ListChecks',
