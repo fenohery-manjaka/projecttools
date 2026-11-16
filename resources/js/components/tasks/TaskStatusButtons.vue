@@ -37,7 +37,11 @@ function send(status: Status, blockedReason?: string) {
 </script>
 
 <template>
-    <div class="flex flex-wrap gap-1.5" role="group" aria-label="Changer le statut">
+    <div
+        class="flex flex-wrap gap-1.5"
+        role="group"
+        aria-label="Changer le statut"
+    >
         <Button
             v-for="status in statuses"
             :key="status.id"

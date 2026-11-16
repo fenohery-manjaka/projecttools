@@ -39,6 +39,15 @@ Taille : S ≈ une demi-journée, M ≈ une journée, L ≈ deux jours.
 - **Pas de nouvelle dépendance npm ou Composer** sans votre accord (le Kanban se fait en glisser-déposer HTML natif).
 - **Hors lot 1** : minuteur et temps passé (lot 3), pièces jointes (lot 2, Documents), liens avec réunions et décisions (lot 2).
 
+## Décidé après la rédaction des tickets (novembre 2026)
+
+Ces deux règles priment sur le texte des tickets quand ils divergent :
+
+- **Créer dans une modale** (`docs/conventions.md`) : pas de page `tasks/create` ni `projects/create`. Le ticket 03 parle de `pages/tasks/Create.vue` : c'est devenu `components/tasks/CreateTaskDialog.vue`, ouvert depuis la page projet, Tâches et Mes tâches, avec ses options dans la prop optionnelle `taskForm` (`Support/TaskFormOptions.php`).
+- **Statuts réglables** (`docs/architecture.md`, « Statuts réglables ») : le ticket 02 parle d'une énumération `TaskStatus` et d'une colonne `tasks.status`. Ce sont devenus la table `task_statuses` (modèle `TaskStatus`, comportement `TaskStatusCategory` : à faire, en cours, bloqué, terminé) et la colonne `tasks.status_id`. Même chose pour les projets (`project_statuses`, `projects.status_id`). Les colonnes du Kanban, les boutons de statut et les filtres suivent l'ordre choisi dans Paramètres.
+
+**Avancement** : 01 à 06 et 10 faits. 07 et 08 (commentaires) confiés au stagiaire. 09 et 11 à 15 en attente.
+
 ## Permissions ajoutées par ce lot
 
 | Permission      | Libellé dans la matrice              | Administrateur | Responsable | Contributeur | Observateur |

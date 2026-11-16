@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Compte rendu · Lot 1 tâches</title>
+        <style>
+            :root {
+                --nuit: #1c201e;
+                --or: #e5a450;
+                --clair: #f3f2ee;
+                --texte: #1c201e;
+                --doux: #5e625c;
+                --vert: #2e7d57;
+                --vertfond: #e3f1e8;
+                --rouge: #bf4237;
+                --rougefond: #f8e6e3;
+                --carte: #ffffff;
+                --bord: #e5e2db;
+                --miel: #8c5410;
+                --mielfond: #f6e8d3;
+                --code: #f4f3ef;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+            }
+            body {
+                background: var(--clair);
+                font-family:
+                    'Segoe UI',
+                    system-ui,
+                    -apple-system,
+                    Arial,
+                    sans-serif;
+                color: var(--texte);
+                padding: 32px 16px;
+                line-height: 1.55;
+            }
+            .page {
+                max-width: 900px;
+                margin: 0 auto;
+                background: var(--carte);
+                border: 1px solid var(--bord);
+                border-radius: 22px;
+                overflow: hidden;
+            }
+            .tete {
+                background: var(--nuit);
+                color: #f3f2ee;
+                padding: 28px 36px;
+            }
+            .tete small {
+                color: var(--or);
+                font-weight: 800;
+                letter-spacing: 2px;
+                font-size: 13px;
+                text-transform: uppercase;
+            }
+            .tete h1 {
+                font-size: 30px;
+                margin-top: 6px;
+            }
+            .tete p {
+                color: #cfccc4;
+                margin-top: 6px;
+            }
+            section {
+                padding: 24px 36px;
+                border-top: 1px solid var(--bord);
+            }
+            section:first-of-type {
+                border-top: none;
+            }
+            h2 {
+                font-size: 13px;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                color: var(--doux);
+                margin-bottom: 12px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14.5px;
+            }
+            td,
+            th {
+                border-bottom: 1px solid var(--bord);
+                padding: 8px 6px;
+                text-align: left;
+                vertical-align: top;
+            }
+            th {
+                font-size: 12px;
+                color: var(--doux);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .ok,
+            .non,
+            .att {
+                display: inline-block;
+                border-radius: 999px;
+                padding: 2px 10px;
+                font-weight: 700;
+                font-size: 12.5px;
+                white-space: nowrap;
+            }
+            .ok {
+                background: var(--vertfond);
+                color: var(--vert);
+            }
+            .non {
+                background: var(--rougefond);
+                color: var(--rouge);
+            }
+            .att {
+                background: var(--mielfond);
+                color: var(--miel);
+            }
+            code {
+                font-family: Consolas, 'Cascadia Mono', monospace;
+                font-size: 13px;
+                background: var(--code);
+                padding: 1px 5px;
+                border-radius: 4px;
+            }
+            ul {
+                padding-left: 20px;
+                display: grid;
+                gap: 6px;
+            }
+            .captures {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+            figure {
+                border: 1px solid var(--bord);
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            figure img {
+                display: block;
+                width: 100%;
+            }
+            figcaption {
+                font-size: 13px;
+                color: var(--doux);
+                padding: 8px 10px;
+            }
+            .attention {
+                background: var(--mielfond);
+                border-left: 4px solid var(--or);
+                padding: 10px 14px;
+                border-radius: 0 10px 10px 0;
+                font-size: 15px;
+            }
+            @media (max-width: 640px) {
+                .tete,
+                section {
+                    padding: 22px 18px;
+                }
+                .captures {
+                    grid-template-columns: 1fr;
+                }
+                table {
+                    display: block;
+                    overflow-x: auto;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page">
+            <div class="tete">
+                <small>Compte rendu · 16/11/2026</small>
+                <h1>Lot 1 · les tickets de tâches</h1>
+                <p>
+                    Branche locale
+                    <code style="background: #2c302d">lot1/travail</code>,
+                    partie de <code style="background: #2c302d">main</code> sur
+                    GitHub. Rien n'est poussé.
+                </p>
+            </div>
+
+            <section>
+                <h2>Où en est chaque ticket</h2>
+                <table>
+                    <tr>
+                        <th>Ticket</th>
+                        <th>État</th>
+                        <th>Ce qu'on voit</th>
+                    </tr>
+                    <tr>
+                        <td>Norme modale + statuts réglables</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            « Nouveau projet » et « Nouvelle tâche » s'ouvrent
+                            en modale. Paramètres › Statuts des projets / des
+                            tâches : ajouter, renommer, colorer, réordonner,
+                            supprimer avec remplacement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>01 · Jalons</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            Section Jalons sur la page projet, « x / y atteints
+                            », « Dépassé ».
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>02 · Module Tâches</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            5 permissions dans la matrice, visibilité par
+                            projet.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03 · Créer, voir, modifier</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            Page tâche, boutons de statut, raison du blocage,
+                            page Modifier.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>04 · Liste et filtres</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            Menu « Tâches », filtres dans l'adresse, recherche,
+                            pagination.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>05 · Kanban</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            Une colonne par statut, glisser-déposer et menu «
+                            Déplacer vers… ».
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>06 · Sous-tâches</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            Cases à cocher, « 2/5 » sur la page, la liste et les
+                            cartes.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>10 · Mes tâches</td>
+                        <td><span class="ok">Fait</span></td>
+                        <td>
+                            Groupes par urgence, case pour terminer, « Ma charge
+                            ».
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>07 · 08 · Commentaires</td>
+                        <td><span class="att">Stagiaire</span></td>
+                        <td>
+                            En correction (voir
+                            <code>documentation/retours/</code>).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>09 · 11 à 15</td>
+                        <td><span class="non">En attente</span></td>
+                        <td>
+                            Cloche, accueil, calendrier, page projet complète,
+                            archivage.
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <h2>Comment je l'ai vérifié</h2>
+                <ul>
+                    <li>
+                        <strong>Tests</strong> : 144 tests passent (<code
+                            >composer test</code
+                        >, avec Pint et PHPStan niveau 7 sans erreur). Types
+                        TypeScript (<code>vue-tsc</code>) sans erreur.
+                    </li>
+                    <li>
+                        <strong>Navigateur</strong>, compte super admin : modale
+                        « Nouveau projet » ; modale « Nouvelle tâche » qui reste
+                        ouverte avec le message d'erreur en français ; création
+                        depuis la page projet ; carte déplacée vers « Bloqué »
+                        avec la raison ; sous-tâche ajoutée et cochée (1/1) ;
+                        tâche visible dans Mes tâches › En retard.
+                    </li>
+                    <li>
+                        <strong>Téléphone (375 px)</strong> : Tâches (liste et
+                        tableau), page tâche, Mes tâches et Statuts des tâches
+                        ne débordent pas de l'écran.
+                    </li>
+                    <li>
+                        La tâche d'essai a été supprimée de ta base locale après
+                        le test.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Captures</h2>
+                <div class="captures">
+                    <figure>
+                        <img
+                            src="captures/2026-11-16-modale-projet.jpg"
+                            alt="Modale Nouveau projet ouverte au-dessus de la liste des projets"
+                        />
+                        <figcaption>
+                            Nouveau projet, en modale sur la liste.
+                        </figcaption>
+                    </figure>
+                    <figure>
+                        <img
+                            src="captures/2026-11-16-modale-tache-erreur.jpg"
+                            alt="Modale Nouvelle tâche avec le message Le champ titre est obligatoire"
+                        />
+                        <figcaption>
+                            Nouvelle tâche : l'erreur garde la modale ouverte.
+                        </figcaption>
+                    </figure>
+                    <figure>
+                        <img
+                            src="captures/2026-11-16-kanban-bloque.jpg"
+                            alt="Tableau Kanban avec la carte dans la colonne Bloqué"
+                        />
+                        <figcaption>
+                            Kanban : la carte passée dans « Bloqué ».
+                        </figcaption>
+                    </figure>
+                    <figure>
+                        <img
+                            src="captures/2026-11-16-page-tache.jpg"
+                            alt="Page de la tâche avec la raison du blocage et une sous-tâche cochée"
+                        />
+                        <figcaption>
+                            Page tâche : raison du blocage, sous-tâche 1/1.
+                        </figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section>
+                <h2>Ce qui reste de ton côté</h2>
+                <div class="attention">
+                    <strong
+                        ><code>composer ci:check</code> s'arrête au contrôle de
+                        format</strong
+                    >
+                    à cause de 3 fichiers d'essai qui ne viennent pas de moi :
+                    <code>demo.md</code> et <code>test.md</code> (déjà sur
+                    <code>main</code> dans GitHub, donc la CI de
+                    <code>main</code> est rouge aussi) et
+                    <code>docs/tickets/ranja/01-test.md</code> (non suivi). Tant
+                    qu'ils restent, la vérification GitHub ne passera pas.
+                </div>
+                <ul style="margin-top: 12px">
+                    <li>
+                        <strong>Ta base locale</strong> a reçu les nouvelles
+                        tables et les permissions des tâches pour les 4 rôles.
+                        Copie d'avant :
+                        <code
+                            >C:\Users\USER\AppData\Local\Temp\claude\b2ae2947e83e7eb0\37086dd2-cd88-49fd-9c46-04cf76040734\scratchpad\database-avant-lot1.sqlite</code
+                        >.
+                    </li>
+                    <li>
+                        <strong>Ta <code>main</code> locale</strong> contient
+                        toujours le commit non validé du stagiaire (comme tu
+                        l'as demandé). Ma branche part de GitHub, sans lui.
+                    </li>
+                    <li>
+                        <strong>Ticket 08</strong> : il aura besoin de ma
+                        branche (le modèle Tâche) et du ticket 07 corrigé.
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </body>
+</html>

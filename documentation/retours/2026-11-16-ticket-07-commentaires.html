@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Retours · Ticket 07 commentaires</title>
+        <style>
+            :root {
+                --nuit: #1c201e;
+                --trait: #5e625c;
+                --or: #e5a450;
+                --clair: #f3f2ee;
+                --texte: #1c201e;
+                --doux: #5e625c;
+                --vert: #2e7d57;
+                --vertfond: #e3f1e8;
+                --rouge: #bf4237;
+                --rougefond: #f8e6e3;
+                --carte: #ffffff;
+                --bord: #e5e2db;
+                --miel: #8c5410;
+                --mielfond: #f6e8d3;
+                --code: #f4f3ef;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+            }
+            body {
+                background: var(--clair);
+                font-family:
+                    'Segoe UI',
+                    system-ui,
+                    -apple-system,
+                    Arial,
+                    sans-serif;
+                color: var(--texte);
+                padding: 32px 16px;
+                line-height: 1.55;
+            }
+            .page {
+                max-width: 860px;
+                margin: 0 auto;
+                background: var(--carte);
+                border: 1px solid var(--bord);
+                border-radius: 22px;
+                overflow: hidden;
+            }
+            .tete {
+                background: var(--nuit);
+                color: #f3f2ee;
+                padding: 28px 170px 28px 36px;
+                position: relative;
+            }
+            .tete small {
+                color: var(--or);
+                font-weight: 800;
+                letter-spacing: 2px;
+                font-size: 13px;
+                text-transform: uppercase;
+            }
+            .tete h1 {
+                font-size: 30px;
+                margin-top: 6px;
+                letter-spacing: -0.01em;
+            }
+            .tete p {
+                color: #cfccc4;
+                margin-top: 6px;
+                font-size: 16px;
+            }
+            .tampon {
+                position: absolute;
+                right: 32px;
+                top: 26px;
+                width: 108px;
+                height: 108px;
+                border: 3px solid var(--or);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: var(--or);
+                font-weight: 800;
+                font-size: 13px;
+                line-height: 1.3;
+                letter-spacing: 1px;
+                transform: rotate(-12deg);
+            }
+            section {
+                padding: 26px 36px;
+                border-top: 1px solid var(--bord);
+            }
+            section:first-of-type {
+                border-top: none;
+            }
+            h2 {
+                font-size: 13px;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                color: var(--doux);
+                margin-bottom: 14px;
+            }
+            .intro {
+                font-size: 17px;
+            }
+            ul.bien {
+                padding-left: 0;
+                list-style: none;
+                display: grid;
+                gap: 8px;
+            }
+            ul.bien li::before {
+                content: '✓ ';
+                color: var(--vert);
+                font-weight: 800;
+            }
+            .point {
+                border: 1px solid var(--bord);
+                border-radius: 14px;
+                padding: 16px 18px;
+                margin-bottom: 14px;
+            }
+            .point h3 {
+                font-size: 17px;
+                display: flex;
+                gap: 10px;
+                align-items: baseline;
+            }
+            .num {
+                flex: none;
+                display: inline-grid;
+                place-items: center;
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                background: var(--rougefond);
+                color: var(--rouge);
+                font-weight: 800;
+                font-size: 13px;
+            }
+            .bonus .num {
+                background: var(--mielfond);
+                color: var(--miel);
+            }
+            .point p {
+                margin-top: 8px;
+            }
+            .lbl {
+                font-weight: 700;
+                color: var(--doux);
+            }
+            code {
+                font-family: Consolas, 'Cascadia Mono', monospace;
+                font-size: 13.5px;
+                background: var(--code);
+                padding: 1px 5px;
+                border-radius: 4px;
+            }
+            pre {
+                font-family: Consolas, 'Cascadia Mono', monospace;
+                font-size: 13px;
+                background: var(--code);
+                border: 1px solid var(--bord);
+                border-radius: 10px;
+                padding: 10px 12px;
+                margin-top: 8px;
+                overflow-x: auto;
+                line-height: 1.5;
+            }
+            .moins {
+                color: var(--rouge);
+            }
+            .plus {
+                color: var(--vert);
+            }
+            .attention {
+                background: var(--mielfond);
+                border-left: 4px solid var(--or);
+                padding: 10px 14px;
+                border-radius: 0 10px 10px 0;
+                margin-top: 10px;
+                font-size: 15px;
+            }
+            .case {
+                display: flex;
+                gap: 10px;
+                align-items: flex-start;
+                margin-bottom: 9px;
+            }
+            .case span:first-child {
+                flex: none;
+                width: 18px;
+                height: 18px;
+                border: 2px solid var(--trait);
+                border-radius: 4px;
+                margin-top: 3px;
+            }
+            .pied {
+                background: var(--clair);
+                padding: 20px 36px;
+                font-size: 14px;
+                color: var(--doux);
+            }
+            @media (max-width: 640px) {
+                .tete {
+                    padding: 24px 20px;
+                }
+                .tampon {
+                    display: none;
+                }
+                section {
+                    padding: 22px 20px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page">
+            <div class="tete">
+                <small>Retours de relecture · 16/11/2026</small>
+                <h1>Ticket 07 · Commentaires et mentions</h1>
+                <p>
+                    Branche <code style="background: #2c302d">Rahaja</code>,
+                    commit <code style="background: #2c302d">f733862</code>.
+                    Relu par Fenohery.
+                </p>
+                <div class="tampon">6 points<br />à corriger</div>
+            </div>
+
+            <section>
+                <h2>En résumé</h2>
+                <p class="intro">
+                    La logique est bonne, et tu as bien repris les retours de la
+                    conception. Mais le commit casse la vérification automatique
+                    (<code>composer ci:check</code>) et la configuration des
+                    tests de toute l'équipe. Corrige les 6 points ci-dessous,
+                    pousse sur la même branche, et je relis.
+                </p>
+            </section>
+
+            <section>
+                <h2>Ce qui est bien</h2>
+                <ul class="bien">
+                    <li>
+                        L'interface <code>Commentable</code> avec
+                        <code>commentTitle()</code> et
+                        <code>commentUrl()</code> : c'est le bon choix.
+                    </li>
+                    <li>
+                        Les commentaires sont supprimés avec l'élément commenté
+                        (<code>bootHasComments</code>).
+                    </li>
+                    <li>
+                        Les règles de mention sont justes : liste autorisée,
+                        jamais l'auteur, une seule notification par personne.
+                    </li>
+                    <li>
+                        Limite de 5 000 caractères, texte vide refusé, «
+                        Utilisateur supprimé », texte affiché avec
+                        <code>{{ }}</code> (pas de <code>v-html</code>).
+                    </li>
+                    <li>
+                        Tes 9 tests couvrent ce que demande le ticket. Une fois
+                        le point 2 corrigé, ils passent tous les 9 (vérifié).
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>À corriger avant validation</h2>
+
+                <div class="point">
+                    <h3>
+                        <span class="num">1</span>Les tests doivent rester sur
+                        SQLite
+                    </h3>
+                    <p>
+                        <span class="lbl">Fichier :</span>
+                        <code>phpunit.xml</code>
+                    </p>
+                    <p>
+                        Tu as remplacé la base des tests par une base MySQL
+                        <code>projecttools_testing</code>. Elle n'existe que sur
+                        ton poste : ni sur GitHub, ni chez les autres. Tout le
+                        monde verrait ses tests échouer. Remets les deux lignes
+                        d'origine :
+                    </p>
+                    <pre><span class="moins">-        &lt;env name="DB_CONNECTION" value="mysql"/&gt;
+-        &lt;env name="DB_DATABASE" value="projecttools_testing"/&gt;</span>
+<span class="plus">+        &lt;env name="DB_CONNECTION" value="sqlite"/&gt;
++        &lt;env name="DB_DATABASE" value=":memory:"/&gt;</span></pre>
+                    <p>
+                        Si tu veux essayer MySQL chez toi, mets-le dans ton
+                        <code>.env.testing</code> (tu l'as déjà ignoré dans
+                        <code>.gitignore</code>, très bien), pas dans
+                        <code>phpunit.xml</code>.
+                    </p>
+                </div>
+
+                <div class="point">
+                    <h3>
+                        <span class="num">2</span>Tes 9 tests échouent : la
+                        colonne <code>status</code> n'existe plus
+                    </h3>
+                    <p>
+                        <span class="lbl">Fichiers :</span>
+                        <code>tests/Feature/Modules/Core/CommentsTest.php</code
+                        >,
+                        <code>tests/Fixtures/CommentableFixture.php</code>
+                    </p>
+                    <p>
+                        Les statuts de projet sont maintenant réglables : la
+                        colonne <code>projects.status</code> a été remplacée par
+                        <code>status_id</code>. Ta fixture écrit encore dans
+                        <code>status</code>, d'où l'erreur
+                        <code>table projects has no column named status</code>.
+                    </p>
+                    <pre><span class="moins">-            'status' =&gt; 'planned',</span>
+<span class="plus">+            'status_id' =&gt; ProjectStatus::default()-&gt;id,</span></pre>
+                    <p>
+                        Ajoute
+                        <code
+                            >use
+                            App\Modules\Projects\Models\ProjectStatus;</code
+                        >
+                        en haut du test, et remplace aussi
+                        <code>'status'</code> par <code>'status_id'</code> dans
+                        le <code>#[Fillable]</code> de la fixture.
+                    </p>
+                </div>
+
+                <div class="point">
+                    <h3>
+                        <span class="num">3</span>Des restes de conflit de
+                        fusion dans la documentation
+                    </h3>
+                    <p>
+                        <span class="lbl">Fichier :</span>
+                        <code>docs/architecture.md</code>
+                    </p>
+                    <p>
+                        Deux lignes sont restées après ta résolution de conflit.
+                        Supprime-les :
+                    </p>
+                    <pre><span class="moins">-HEAD</span>
+   ## Statuts réglables
+   …
+<span class="moins">-351a525 (07 noyau-commentaire module)</span></pre>
+                    <p>
+                        Après une fusion, relis toujours le fichier en entier
+                        avant de faire le commit.
+                    </p>
+                </div>
+
+                <div class="point">
+                    <h3>
+                        <span class="num">4</span>L'alias de type : corriger la
+                        documentation, pas encore de code
+                    </h3>
+                    <p>
+                        <span class="lbl">Fichier :</span>
+                        <code>docs/architecture.md</code>, section «
+                        Commentaires », étape 1
+                    </p>
+                    <p>
+                        Ta documentation dit d'ajouter l'alias « dans le
+                        <code>morphMap</code> du
+                        <code>CoreServiceProvider</code> ». Rien n'est déclaré
+                        dans le code, et il ne faut <strong>pas</strong> le
+                        faire ainsi :
+                    </p>
+                    <div class="attention">
+                        <strong>Piège :</strong>
+                        <code>Relation::enforceMorphMap()</code> oblige à donner
+                        un alias à <em>tous</em> les modèles, y compris
+                        <code>User</code>. Or la table des rôles
+                        (<code>model_has_roles</code>) contient déjà
+                        <code>App\Models\User</code> dans
+                        <code>model_type</code> : avec un alias
+                        <code>user</code>, plus personne n'aurait ses rôles. Et
+                        le noyau ne doit pas connaître les modules (Tâches,
+                        Idées…).
+                    </div>
+                    <p>
+                        La bonne règle : chaque module déclare l'alias de
+                        <em>son</em> modèle dans sa méthode <code>boot()</code>,
+                        avec <code>morphMap</code> (sans « enforce »). Les
+                        lignes déjà écrites avec un nom de classe continuent de
+                        fonctionner. Pour les tâches, ce sera au ticket 08 :
+                    </p>
+                    <pre>
+// app/Modules/Tasks/TasksModule.php
+public function boot(): void
+{
+    Relation::morphMap(['task' =&gt; Task::class]);
+}</pre>
+                    <p>
+                        Corrige donc l'étape 1 de la section « Commentaires » en
+                        ce sens. Pour le ticket 07, ton
+                        <code>Relation::morphMap()</code> dans le test suffit.
+                    </p>
+                </div>
+
+                <div class="point">
+                    <h3>
+                        <span class="num">5</span><code>composer ci:check</code>
+                        doit être vert
+                    </h3>
+                    <p>Deux contrôles échouent aujourd'hui :</p>
+                    <p>
+                        <span class="lbl">Formatage :</span>
+                        <code>CommentThread.vue</code> n'est pas formaté. Lance
+                        <code>npm run check:fix</code>.
+                    </p>
+                    <p>
+                        <span class="lbl">PHPStan :</span> « Trait HasComments
+                        is used zero times ». C'est normal tant qu'aucun modèle
+                        ne l'utilise (ce sera <code>Task</code>
+                        au ticket 08). En attendant, ignore cette erreur
+                        précise, et seulement elle, dans
+                        <code>phpstan.neon</code> :
+                    </p>
+                    <pre>
+parameters:
+    ignoreErrors:
+        -
+            identifier: trait.unused
+            path: app/Modules/Core/Concerns/HasComments.php</pre>
+                    <p>
+                        On retirera ces lignes au ticket 08. Avant chaque push,
+                        lance <code>composer ci:check</code> jusqu'au bout : il
+                        aurait signalé les points 2, 3 et 5.
+                    </p>
+                </div>
+
+                <div class="point">
+                    <h3>
+                        <span class="num">6</span>Retirer les fichiers hors
+                        sujet du commit
+                    </h3>
+                    <p>
+                        Ton commit ajoute 40 fichiers dans
+                        <code>.github/skills/</code> (des consignes pour
+                        assistants IA, générées sur ton poste) et le PDF de
+                        conception à la racine du dépôt. Ils n'ont rien à faire
+                        dans ce ticket. Retire-les du dépôt sans les effacer de
+                        ton disque :
+                    </p>
+                    <pre>
+git rm -r --cached .github/skills Conception_Commentaires_Mentions.pdf
+git commit -m "chore: retirer les fichiers hors du ticket 07"</pre>
+                    <p>
+                        Règle du projet : on ne modifie que les fichiers listés
+                        dans le ticket. Un fichier en plus se signale et
+                        s'explique.
+                    </p>
+                </div>
+            </section>
+
+            <section>
+                <h2>Améliorations (bienvenues, pas bloquantes)</h2>
+
+                <div class="point bonus">
+                    <h3>
+                        <span class="num">a</span>Le journal répète le nom de
+                        l'auteur
+                    </h3>
+                    <p>
+                        Dans <code>PostComment</code>, tu écris
+                        <code
+                            >"{$author-&gt;name} a ajouté un commentaire à
+                            …"</code
+                        >. Le journal enregistre déjà l'auteur à part (colonne
+                        <code>user_id</code>), et les autres messages commencent
+                        par le verbe : <code>"a créé le projet « X »"</code>.
+                        Écris
+                        <code
+                            >"a commenté « {$commentable-&gt;commentTitle()}
+                            »"</code
+                        >.
+                    </p>
+                </div>
+
+                <div class="point bonus">
+                    <h3>
+                        <span class="num">b</span>Le bouton Supprimer manque
+                    </h3>
+                    <p>
+                        <code>CommentThread.vue</code> accepte
+                        <code>canDelete</code> mais n'affiche aucun bouton. Le
+                        ticket 08 en aura besoin : ajoute une prop
+                        <code>deleteUrl: (comment) =&gt; string</code> et un
+                        petit bouton « Supprimer » (avec confirmation) quand
+                        <code>canDelete(comment)</code> est vrai.
+                    </p>
+                </div>
+
+                <div class="point bonus">
+                    <h3>
+                        <span class="num">c</span>Utiliser les composants du
+                        projet
+                    </h3>
+                    <p>
+                        Le bouton « Commenter » est fait à la main. Utilise
+                        <code>Button</code> de
+                        <code>@/components/ui/button</code>, comme partout
+                        ailleurs, pour garder le même style.
+                    </p>
+                </div>
+
+                <div class="point bonus">
+                    <h3>
+                        <span class="num">d</span>Format des messages de commit
+                    </h3>
+                    <p>
+                        « 07 noyau-commentaire module » ne suit pas la
+                        convention du projet. Exemple :
+                        <code
+                            >feat(core): ajouter les commentaires et les
+                            mentions</code
+                        >. Pour tes prochains commits, utilise ce format.
+                    </p>
+                </div>
+            </section>
+
+            <section>
+                <h2>Avant de repousser, vérifie</h2>
+                <div class="case">
+                    <span></span
+                    ><span
+                        ><code>composer ci:check</code> se termine sans
+                        erreur.</span
+                    >
+                </div>
+                <div class="case">
+                    <span></span
+                    ><span
+                        ><code>phpunit.xml</code> est identique à celui de
+                        <code>main</code> :
+                        <code>git diff origin/main -- phpunit.xml</code>
+                        n'affiche rien.</span
+                    >
+                </div>
+                <div class="case">
+                    <span></span
+                    ><span
+                        ><code>docs/architecture.md</code> ne contient plus ni
+                        <code>HEAD</code> ni <code>351a525</code>.</span
+                    >
+                </div>
+                <div class="case">
+                    <span></span
+                    ><span
+                        ><code>git diff --stat origin/main...HEAD</code> ne
+                        liste que les fichiers du ticket 07 (plus
+                        <code>phpstan.neon</code> et
+                        <code>.gitignore</code>).</span
+                    >
+                </div>
+                <div class="case">
+                    <span></span
+                    ><span
+                        >Pousse sur la même branche <code>Rahaja</code>, puis
+                        préviens-moi.</span
+                    >
+                </div>
+            </section>
+
+            <div class="pied">
+                Une question sur un point ? Demande avant de corriger : c'est
+                plus rapide que de deviner.
+            </div>
+        </div>
+    </body>
+</html>

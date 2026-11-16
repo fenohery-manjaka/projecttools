@@ -6,6 +6,8 @@ import TaskController from '@/actions/App/Modules/Tasks/Http/Controllers/TaskCon
 import Heading from '@/components/Heading.vue';
 import MemberAvatar from '@/components/MemberAvatar.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
+import SubtaskList from '@/components/tasks/SubtaskList.vue';
+import type { Subtask } from '@/components/tasks/SubtaskList.vue';
 import TaskStatusButtons from '@/components/tasks/TaskStatusButtons.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,6 +22,7 @@ type Task = TaskSummary & {
     blocked_reason: string | null;
     estimate_hours: string | null;
     milestone: { id: number; name: string; due_on: string } | null;
+    subtask_list: Subtask[];
     creator: string | null;
     created_at: string | null;
     completed_at: string | null;
@@ -119,13 +122,22 @@ function destroy() {
                     </p>
                     <p v-else class="empty-state">Pas de description.</p>
                 </section>
+
+                <SubtaskList
+                    :task-id="task.id"
+                    :subtasks="task.subtask_list"
+                    :can-manage="can.update"
+                />
             </div>
 
             <section class="panel p-5">
                 <dl class="grid gap-3.5 text-sm">
                     <div>
                         <dt class="text-muted-foreground">Responsables</dt>
-                        <dd v-if="task.assignees.length" class="mt-1.5 space-y-1.5">
+                        <dd
+                            v-if="task.assignees.length"
+                            class="mt-1.5 space-y-1.5"
+                        >
                             <span
                                 v-for="assignee in task.assignees"
                                 :key="assignee.id"
@@ -160,7 +172,9 @@ function destroy() {
                         <dd class="mt-1">
                             <template v-if="task.milestone"
                                 >{{ task.milestone.name }} ·
-                                {{ formatDate(task.milestone.due_on) }}</template
+                                {{
+                                    formatDate(task.milestone.due_on)
+                                }}</template
                             >
                             <template v-else>Aucun</template>
                         </dd>
