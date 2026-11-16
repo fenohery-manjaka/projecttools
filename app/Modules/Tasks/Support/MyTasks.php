@@ -46,7 +46,7 @@ class MyTasks
         $sorted = $tasks->sortBy([
             fn (Task $a, Task $b): int => array_search($this->group($a), array_keys(self::GROUPS), true) <=> array_search($this->group($b), array_keys(self::GROUPS), true),
             fn (Task $a, Task $b): int => $a->priority->rank() <=> $b->priority->rank(),
-            fn (Task $a, Task $b): int => ($a->due_on?->timestamp ?? PHP_INT_MAX) <=> ($b->due_on?->timestamp ?? PHP_INT_MAX),
+            fn (Task $a, Task $b): int => ($a->due_on->timestamp ?? PHP_INT_MAX) <=> ($b->due_on->timestamp ?? PHP_INT_MAX),
             fn (Task $a, Task $b): int => $a->id <=> $b->id,
         ])->values();
 

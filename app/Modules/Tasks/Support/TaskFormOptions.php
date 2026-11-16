@@ -7,6 +7,7 @@ use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Tasks\Enums\TaskPriority;
 use App\Modules\Tasks\Models\TaskStatus;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Options of the task form, shared by the "New task" dialog of every page and the edit page.
@@ -46,14 +47,14 @@ class TaskFormOptions
     /**
      * Visible, not archived projects where the user may create a task.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Project>
+     * @return Collection<int, Project>
      */
-    private function projects(User $user, ?Project $alsoInclude): \Illuminate\Database\Eloquent\Collection
+    private function projects(User $user, ?Project $alsoInclude): Collection
     {
         $canCreate = $user->is_super_admin || $user->checkPermissionTo('tasks.create');
 
         if (! $canCreate && $alsoInclude === null) {
-            return new \Illuminate\Database\Eloquent\Collection;
+            return new Collection;
         }
 
         return Project::query()
