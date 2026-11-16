@@ -6,6 +6,7 @@
 */
 
 use App\Modules\Tasks\Http\Controllers\Settings\TaskStatusController as TaskStatusSettingsController;
+use App\Modules\Tasks\Http\Controllers\SubtaskController;
 use App\Modules\Tasks\Http\Controllers\TaskController;
 use App\Modules\Tasks\Http\Controllers\TaskMoveController;
 use App\Modules\Tasks\Http\Controllers\TaskStatusController;
@@ -25,6 +26,12 @@ Route::where(['task' => '[0-9]+'])->group(function () {
     Route::patch('tasks/{task}/status', [TaskStatusController::class, 'update'])->can('update', 'task')->name('tasks.status.update');
     Route::patch('tasks/{task}/move', [TaskMoveController::class, 'update'])->can('update', 'task')->name('tasks.move');
     Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->can('delete', 'task')->name('tasks.destroy');
+
+    Route::scopeBindings()->group(function () {
+        Route::post('tasks/{task}/subtasks', [SubtaskController::class, 'store'])->can('update', 'task')->name('tasks.subtasks.store');
+        Route::patch('tasks/{task}/subtasks/{subtask}', [SubtaskController::class, 'update'])->can('update', 'task')->name('tasks.subtasks.update');
+        Route::delete('tasks/{task}/subtasks/{subtask}', [SubtaskController::class, 'destroy'])->can('update', 'task')->name('tasks.subtasks.destroy');
+    });
 });
 
 // Settings › Task statuses, reserved to the super admin like roles and modules.

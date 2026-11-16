@@ -11,6 +11,7 @@ use App\Modules\Tasks\Actions\CreateTask;
 use App\Modules\Tasks\Enums\TaskPriority;
 use App\Modules\Tasks\Http\Requests\TaskFilterRequest;
 use App\Modules\Tasks\Http\Requests\TaskRequest;
+use App\Modules\Tasks\Models\Subtask;
 use App\Modules\Tasks\Models\Task;
 use App\Modules\Tasks\Models\TaskStatus;
 use App\Modules\Tasks\Support\TaskFilters;
@@ -41,7 +42,8 @@ class TaskController extends Controller
         $view = $request->view();
 
         $query = $taskFilters->apply(Task::query()->visibleTo($user), $filters)
-            ->with(['project:id,name,color', 'status', 'assignees:id,name']);
+            ->with(['project:id,name,color', 'status', 'assignees:id,name'])
+            ->withSubtaskCounts();
 
         if ($view === 'board') {
             $tasks = $query->orderBy('position')->orderBy('id')->limit(self::BOARD_LIMIT)->get();
@@ -103,7 +105,7 @@ class TaskController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $task->load(['project:id,name,color,archived_at', 'status', 'milestone:id,name,due_on', 'assignees:id,name', 'creator:id,name']);
+        $task->load(['project:id,name,color,archived_at', 'status', 'milestone:id,name,due_on', 'assignees:id,name', 'creator:id,name', 'subtasks']);
 
         return Inertia::render('tasks/Show', [
             'task' => [
@@ -116,6 +118,11 @@ class TaskController extends Controller
                     'name' => $task->milestone->name,
                     'due_on' => $task->milestone->due_on->toDateString(),
                 ],
+                'subtask_list' => $task->subtasks->map(fn (Subtask $subtask): array => [
+                    'id' => $subtask->id,
+                    'title' => $subtask->title,
+                    'done' => $subtask->done_at !== null,
+                ])->values(),
                 'creator' => $task->creator?->name,
                 'created_at' => $task->created_at?->toIso8601String(),
                 'completed_at' => $task->completed_at?->toIso8601String(),
