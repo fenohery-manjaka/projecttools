@@ -3,6 +3,8 @@
 namespace App\Modules\Tasks\Models;
 
 use App\Models\User;
+use App\Modules\Core\Concerns\HasComments;
+use App\Modules\Core\Contracts\Commentable;
 use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Tasks\Database\Factories\TaskFactory;
@@ -44,10 +46,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 #[Fillable(['project_id', 'milestone_id', 'status_id', 'title', 'description', 'priority', 'due_on', 'estimate_hours', 'blocked_reason', 'position', 'completed_at', 'created_by'])]
 #[UseFactory(TaskFactory::class)]
 #[UsePolicy(TaskPolicy::class)]
-class Task extends Model
+class Task extends Model implements Commentable
 {
     /** @use HasFactory<TaskFactory> */
-    use HasFactory;
+    use HasComments, HasFactory;
+
+    public function commentTitle(): string
+    {
+        return "la tâche « {$this->title} »";
+    }
+
+    public function commentUrl(): string
+    {
+        return route('tasks.show', $this);
+    }
 
     protected function casts(): array
     {

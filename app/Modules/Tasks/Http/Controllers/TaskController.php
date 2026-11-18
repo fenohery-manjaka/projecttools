@@ -41,7 +41,23 @@ class TaskController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $task->load(['project:id,name,color,archived_at', 'status', 'milestone:id,name,due_on', 'assignees:id,name', 'creator:id,name']);
+        $task->load([
+            'project:id,name,color,archived_at,owner_id',
+            'project.owner:id,name,deactivated_at',
+            'project.members:id,name,deactivated_at',
+            'status',
+            'milestone:id,name,due_on',
+            'assignees:id,name',
+            'creator:id,name',
+            'comments.author:id,name',
+        ]);
+
+        $mentionable = $task->project->members
+            ->push($task->project->owner)
+            ->filter(fn (User $member): bool => $member->deactivated_at === null)
+            ->unique('id')
+            ->sortBy('name')
+            ->values();
 
         return Inertia::render('tasks/Show', [
             'task' => [
@@ -62,7 +78,21 @@ class TaskController extends Controller
             'can' => [
                 'update' => $user->can('update', $task),
                 'delete' => $user->can('delete', $task),
+                'comment' => $user->can('comment', $task),
             ],
+            'comments' => $task->comments->map(fn ($comment): array => [
+                'id' => $comment->id,
+                'body' => $comment->body,
+                'created_at' => $comment->created_at->toIso8601String(),
+                'author' => $comment->author === null ? null : [
+                    'id' => $comment->author->id,
+                    'name' => $comment->author->name,
+                ],
+            ]),
+            'mentionable' => $mentionable->map(fn (User $member): array => [
+                'id' => $member->id,
+                'name' => $member->name,
+            ]),
         ]);
     }
 

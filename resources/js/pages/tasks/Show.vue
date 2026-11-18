@@ -3,6 +3,7 @@ import { Head, Link, router, setLayoutProps } from '@inertiajs/vue3';
 import { TriangleAlert } from '@lucide/vue';
 import { watchEffect } from 'vue';
 import TaskController from '@/actions/App/Modules/Tasks/Http/Controllers/TaskController';
+import CommentThread from '@/components/comments/CommentThread.vue';
 import Heading from '@/components/Heading.vue';
 import MemberAvatar from '@/components/MemberAvatar.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
@@ -12,8 +13,10 @@ import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/dates';
 import { priorityTone } from '@/lib/tones';
 import { index as projectsIndex, show as showProject } from '@/routes/projects';
+import { store as storeComment } from '@/routes/tasks/comments';
 import { edit, show } from '@/routes/tasks';
 import type { Status, TaskSummary } from '@/types';
+import type { Comment, MentionableUser } from '@/types/comments';
 
 type Task = TaskSummary & {
     description: string | null;
@@ -28,7 +31,9 @@ type Task = TaskSummary & {
 const props = defineProps<{
     task: Task;
     statuses: Status[];
-    can: { update: boolean; delete: boolean };
+    can: { update: boolean; delete: boolean; comment: boolean };
+    comments: Comment[];
+    mentionable: MentionableUser[];
 }>();
 
 watchEffect(() => {
@@ -182,5 +187,12 @@ function destroy() {
                 </dl>
             </section>
         </div>
+
+        <CommentThread
+            v-if="can.comment"
+            :comments="comments"
+            :mentionable="mentionable"
+            :submit-url="storeComment.url(task.id)"
+        />
     </div>
 </template>
