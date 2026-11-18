@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
 import InputError from '@/components/InputError.vue';
 import type { Comment, MentionableUser } from '@/types/comments';
 
@@ -12,6 +13,7 @@ const props = withDefaults(
         mentionable: MentionableUser[];
         submitUrl: string;
         canDelete?: (comment: Comment) => boolean;
+        deleteUrl?: (comment: Comment) => string;
     }>(),
     { canDelete: () => false },
 );
@@ -56,7 +58,9 @@ function chooseMention(person: MentionableUser): void {
     const cursor = textarea.value.selectionStart;
     const start = mentionStart.value;
     form.body = `${form.body.slice(0, start)}@${person.name} ${form.body.slice(cursor)}`;
-    form.mentioned_user_ids = [...new Set([...form.mentioned_user_ids, person.id])];
+    form.mentioned_user_ids = [
+        ...new Set([...form.mentioned_user_ids, person.id]),
+    ];
     suggestionsOpen.value = false;
     mentionStart.value = null;
 
@@ -74,10 +78,13 @@ function handleKeydown(event: KeyboardEvent): void {
 
     if (event.key === 'ArrowDown') {
         event.preventDefault();
-        highlightedSuggestion.value = (highlightedSuggestion.value + 1) % suggestions.value.length;
+        highlightedSuggestion.value =
+            (highlightedSuggestion.value + 1) % suggestions.value.length;
     } else if (event.key === 'ArrowUp') {
         event.preventDefault();
-        highlightedSuggestion.value = (highlightedSuggestion.value - 1 + suggestions.value.length) % suggestions.value.length;
+        highlightedSuggestion.value =
+            (highlightedSuggestion.value - 1 + suggestions.value.length) %
+            suggestions.value.length;
     } else if (event.key === 'Enter') {
         event.preventDefault();
         const person = suggestions.value[highlightedSuggestion.value];
@@ -92,18 +99,45 @@ function handleKeydown(event: KeyboardEvent): void {
 
 function submit(): void {
     const mentionedUserIds = form.mentioned_user_ids.filter((id) =>
-        props.mentionable.find((person) => person.id === id && form.body.includes(`@${person.name}`)),
+        props.mentionable.find(
+            (person) =>
+                person.id === id && form.body.includes(`@${person.name}`),
+        ),
     );
 
-    form.transform(() => ({ body: form.body, mentioned_user_ids: mentionedUserIds })).post(props.submitUrl, {
+    form.transform(() => ({
+        body: form.body,
+        mentioned_user_ids: mentionedUserIds,
+    })).post(props.submitUrl, {
         preserveScroll: true,
         onSuccess: () => form.reset(),
     });
 }
 
+function deleteComment(comment: Comment): void {
+    if (!props.deleteUrl || !props.canDelete(comment)) {
+        return;
+    }
+
+    if (!window.confirm('Supprimer ce commentaire ?')) {
+        return;
+    }
+
+    router.delete(props.deleteUrl(comment), { preserveScroll: true });
+}
+
 function relativeDate(value: string): string {
-    const seconds = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 1000));
-    const units: [number, string][] = [[31536000, 'an'], [2592000, 'mois'], [86400, 'jour'], [3600, 'heure'], [60, 'minute']];
+    const seconds = Math.max(
+        0,
+        Math.floor((Date.now() - new Date(value).getTime()) / 1000),
+    );
+    const units: [number, string][] = [
+        [31536000, 'an'],
+        [2592000, 'mois'],
+        [86400, 'jour'],
+        [3600, 'heure'],
+        [60, 'minute'],
+    ];
     const unit = units.find(([length]) => seconds >= length);
 
     if (!unit) {
@@ -114,24 +148,50 @@ function relativeDate(value: string): string {
     return `il y a ${count} ${unit[1]}${unit[1] === 'mois' || count === 1 ? '' : 's'}`;
 }
 
-watch(() => form.body, () => {
-    form.body = form.body.slice(0, MAX_LENGTH);
-    updateMentionState();
-});
+watch(
+    () => form.body,
+    () => {
+        form.body = form.body.slice(0, MAX_LENGTH);
+        updateMentionState();
+    },
+);
 </script>
 
 <template>
     <section class="grid gap-4" aria-labelledby="comments-title">
         <h2 id="comments-title" class="text-lg font-semibold">Commentaires</h2>
 
-        <p v-if="comments.length === 0" class="text-sm text-muted-foreground">Aucun commentaire</p>
+        <p v-if="comments.length === 0" class="text-sm text-muted-foreground">
+            Aucun commentaire
+        </p>
         <ol v-else class="grid gap-4" aria-live="polite">
-            <li v-for="comment in comments" :key="comment.id" class="grid gap-1">
-                <div class="flex items-baseline justify-between gap-3">
-                    <span class="font-medium">{{ comment.author?.name ?? 'Utilisateur supprimé' }}</span>
-                    <time class="text-xs text-muted-foreground" :datetime="comment.created_at">{{ relativeDate(comment.created_at) }}</time>
+            <li
+                v-for="comment in comments"
+                :key="comment.id"
+                class="grid gap-1"
+            >
+                <div class="flex items-center justify-between gap-3">
+                    <span class="font-medium">{{
+                        comment.author?.name ?? 'Utilisateur supprimé'
+                    }}</span>
+                    <div class="flex items-center gap-2">
+                        <time
+                            class="text-xs text-muted-foreground"
+                            :datetime="comment.created_at"
+                            >{{ relativeDate(comment.created_at) }}</time
+                        >
+                        <Button
+                            v-if="deleteUrl && canDelete(comment)"
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            @click="deleteComment(comment)"
+                        >
+                            Supprimer
+                        </Button>
+                    </div>
                 </div>
-                <p class="whitespace-pre-wrap text-sm">{{ comment.body }}</p>
+                <p class="text-sm whitespace-pre-wrap">{{ comment.body }}</p>
             </li>
         </ol>
 
@@ -149,19 +209,36 @@ watch(() => form.body, () => {
                 @input="updateMentionState"
                 @keydown="handleKeydown"
             />
-            <ul v-if="suggestionsOpen" class="absolute inset-x-0 bottom-full z-10 mb-1 max-h-48 overflow-auto rounded-md border bg-background p-1 shadow-md" role="listbox" aria-label="Personnes à mentionner">
+            <ul
+                v-if="suggestionsOpen"
+                class="absolute inset-x-0 bottom-full z-10 mb-1 max-h-48 overflow-auto rounded-md border bg-background p-1 shadow-md"
+                role="listbox"
+                aria-label="Personnes à mentionner"
+            >
                 <li v-for="(person, index) in suggestions" :key="person.id">
-                    <button type="button" class="w-full rounded px-2 py-1 text-left text-sm hover:bg-muted" :class="{ 'bg-muted': index === highlightedSuggestion }" role="option" :aria-selected="index === highlightedSuggestion" @mousedown.prevent="chooseMention(person)">
+                    <button
+                        type="button"
+                        class="w-full rounded px-2 py-1 text-left text-sm hover:bg-muted"
+                        :class="{ 'bg-muted': index === highlightedSuggestion }"
+                        role="option"
+                        :aria-selected="index === highlightedSuggestion"
+                        @mousedown.prevent="chooseMention(person)"
+                    >
                         {{ person.name }}
                     </button>
                 </li>
             </ul>
             <InputError :message="form.errors.body" />
             <div class="flex items-center justify-between gap-3">
-                <span class="text-xs text-muted-foreground">{{ form.body.length }}/{{ MAX_LENGTH }}</span>
-                <button type="submit" class="rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50" :disabled="form.processing || form.body.trim() === ''">
+                <span class="text-xs text-muted-foreground"
+                    >{{ form.body.length }}/{{ MAX_LENGTH }}</span
+                >
+                <Button
+                    type="submit"
+                    :disabled="form.processing || form.body.trim() === ''"
+                >
                     {{ form.processing ? 'Envoi…' : 'Commenter' }}
-                </button>
+                </Button>
             </div>
         </form>
     </section>

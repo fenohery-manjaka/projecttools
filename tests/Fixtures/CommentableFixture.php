@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property string $name
  */
-#[Fillable(['name', 'owner_id', 'color', 'status'])]
+#[Fillable(['name', 'owner_id', 'color', 'status_id'])]
 class CommentableFixture extends Model implements Commentable
 {
     use HasComments;

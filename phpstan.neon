@@ -11,3 +11,8 @@ parameters:
         - routes/
 
     level: 7
+
+    ignoreErrors:
+        -
+            identifier: trait.unused
+            path: app/Modules/Core/Concerns/HasComments.php

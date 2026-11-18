@@ -41,7 +41,7 @@ class PostComment
                 'body' => $body,
             ]);
 
-            $this->recordActivity->handle($author, "{$author->name} a ajouté un commentaire à {$commentable->commentTitle()}.", $commentable);
+            $this->recordActivity->handle($author, "a commenté « {$commentable->commentTitle()} »", $commentable);
 
             $recipientIds = collect($mentionedUserIds)
                 ->map(fn (mixed $id): int => (int) $id)

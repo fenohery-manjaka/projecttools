@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Modules\Core\Actions\DeleteComment;
 use App\Modules\Core\Actions\PostComment;
 use App\Modules\Core\Notifications\MentionedInComment;
+use App\Modules\Projects\Models\ProjectStatus;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -148,7 +149,7 @@ class CommentsTest extends TestCase
             'name' => $name,
             'owner_id' => $owner->id,
             'color' => '#3F7A64',
-            'status' => 'planned',
+            'status_id' => ProjectStatus::default()->id,
         ]);
     }
 }

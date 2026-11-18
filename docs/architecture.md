@@ -118,7 +118,6 @@ Construit côté serveur dans [`HandleInertiaRequests`](../app/Http/Middleware/H
 
 Un membre désactivé est déconnecté à sa requête suivante ([`EnsureUserIsActive`](../app/Modules/Core/Http/Middleware/EnsureUserIsActive.php)).
 
-HEAD
 ## Statuts réglables
 
 Les statuts des projets et des tâches ne sont pas dans le code : le super admin les ajoute, renomme, colore, réordonne et supprime dans **Paramètres › Statuts des projets** et **› Statuts des tâches**.
@@ -135,12 +134,11 @@ Les statuts des projets et des tâches ne sont pas dans le code : le super admin
 Les commentaires vivent dans le noyau et sont attachés à n'importe quel modèle par une relation polymorphe.
 Pour brancher un module :
 
-1. Sur le modèle commenté, utiliser `HasComments`, implémenter `Commentable` (`commentTitle()` et `commentUrl()`), puis ajouter son alias dans le `morphMap` du `CoreServiceProvider`.
+1. Sur le modèle commenté, utiliser `HasComments`, implémenter `Commentable` (`commentTitle()` et `commentUrl()`), puis déclarer l'alias de ce modèle dans la méthode `boot()` de son module avec `Relation::morphMap()` (sans `enforceMorphMap()`).
 2. Créer dans le module une route protégée par sa propre permission, qui vérifie les personnes mentionnables et appelle `PostComment` (et `DeleteComment` pour la suppression).
 3. Afficher `CommentThread.vue` en lui passant les commentaires chargés avec leur auteur, les personnes mentionnables et l'adresse d'envoi générée par Wayfinder.
 
 `PostComment` valide le texte, inscrit l'activité et ne notifie que les identifiants mentionnés autorisés par le module, sans jamais notifier l'auteur ni une même personne deux fois. Les notifications stockent directement l'auteur, l'extrait, le titre de l'élément et son adresse relative.
-351a525 (07 noyau-commentaire module)
 
 ## Créer un module (pas à pas)
 
