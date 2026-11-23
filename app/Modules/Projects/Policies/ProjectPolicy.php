@@ -28,6 +28,13 @@ class ProjectPolicy
 
     public function update(User $user, Project $project): bool
     {
+        return $project->archived_at === null
+            && $user->checkPermissionTo('projects.update')
+            && $this->view($user, $project);
+    }
+
+    public function archive(User $user, Project $project): bool
+    {
         return $user->checkPermissionTo('projects.update') && $this->view($user, $project);
     }
 

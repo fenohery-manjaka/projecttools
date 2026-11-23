@@ -8,7 +8,8 @@ import {
     usePage,
 } from '@inertiajs/vue3';
 import { Plus } from '@lucide/vue';
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import ProjectArchiveController from '@/actions/App/Modules/Projects/Http/Controllers/ProjectArchiveController';
 import ProjectController from '@/actions/App/Modules/Projects/Http/Controllers/ProjectController';
 import ProjectMemberController from '@/actions/App/Modules/Projects/Http/Controllers/ProjectMemberController';
 import Heading from '@/components/Heading.vue';
@@ -21,6 +22,7 @@ import CreateTaskDialog from '@/components/tasks/CreateTaskDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { edit, index, show } from '@/routes/projects';
+import { formatDate } from '@/lib/dates';
 import type { Status, TaskFormOptions } from '@/types';
 
 type Project = {
@@ -35,6 +37,7 @@ type Project = {
     ends_on: string | null;
     members: { id: number; name: string; email: string; is_owner: boolean }[];
     milestones: ProjectMilestone[];
+    archived_at: string | null;
 };
 
 const props = defineProps<{
@@ -45,11 +48,13 @@ const props = defineProps<{
         delete: boolean;
         manageMembers: boolean;
         createTask: boolean;
+        archive: boolean;
     };
     taskForm?: TaskFormOptions;
 }>();
 
 const creatingTask = ref(false);
+const canEdit = computed(() => props.can.update && !props.project.archived_at);
 
 const page = usePage();
 
@@ -62,17 +67,19 @@ watchEffect(() => {
     });
 });
 
-const formatDate = (date: string) =>
-    new Date(`${date}T00:00`).toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
-
 function destroy() {
     if (window.confirm(`Supprimer le projet « ${props.project.name} » ?`)) {
         router.delete(ProjectController.destroy.url(props.project.id));
     }
+}
+
+function archive() {
+    if (props.project.archived_at) {
+        router.delete(ProjectArchiveController.destroy.url(props.project.id));
+        return;
+    }
+
+    router.post(ProjectArchiveController.store.url(props.project.id));
 }
 
 function removeMember(memberId: number) {
@@ -90,6 +97,12 @@ function removeMember(memberId: number) {
     <Head :title="project.name" />
 
     <div class="space-y-6">
+        <div
+            v-if="project.archived_at"
+            class="rounded-xl border border-border bg-sunk px-4 py-3 text-sm text-muted-foreground"
+        >
+            Projet archivé le {{ formatDate(project.archived_at, 'long') }}.
+        </div>
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div class="flex items-center gap-4">
                 <span
@@ -119,20 +132,23 @@ function removeMember(memberId: number) {
                 </div>
             </div>
             <div class="flex gap-2">
-                <Button v-if="can.createTask" @click="creatingTask = true"
+                <Button v-if="canEdit" @click="creatingTask = true"
                     ><Plus />Nouvelle tâche</Button
                 >
-                <Button v-if="can.update" variant="outline" as-child>
+                <Button v-if="canEdit" variant="outline" as-child>
                     <Link :href="edit(project.id)">Modifier</Link>
                 </Button>
                 <Button v-if="can.delete" variant="destructive" @click="destroy"
                     >Supprimer</Button
                 >
+                <Button v-if="can.archive" variant="outline" @click="archive">
+                    {{ project.archived_at ? 'Désarchiver' : 'Archiver' }}
+                </Button>
             </div>
         </div>
 
         <CreateTaskDialog
-            v-if="can.createTask"
+            v-if="canEdit"
             v-model:open="creatingTask"
             :options="taskForm"
         />
@@ -168,7 +184,7 @@ function removeMember(memberId: number) {
                 class="lg:col-start-1"
                 :project-id="project.id"
                 :milestones="project.milestones"
-                :can-manage="can.update"
+                :can-manage="canEdit"
             />
 
             <section

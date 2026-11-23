@@ -6,6 +6,7 @@
 */
 
 use App\Modules\Projects\Http\Controllers\MilestoneController;
+use App\Modules\Projects\Http\Controllers\ProjectArchiveController;
 use App\Modules\Projects\Http\Controllers\ProjectController;
 use App\Modules\Projects\Http\Controllers\ProjectMemberController;
 use App\Modules\Projects\Http\Controllers\Settings\ProjectStatusController;
@@ -18,6 +19,8 @@ Route::get('projects/{project}', [ProjectController::class, 'show'])->can('view'
 Route::get('projects/{project}/edit', [ProjectController::class, 'edit'])->can('update', 'project')->name('projects.edit');
 Route::put('projects/{project}', [ProjectController::class, 'update'])->can('update', 'project')->name('projects.update');
 Route::delete('projects/{project}', [ProjectController::class, 'destroy'])->can('delete', 'project')->name('projects.destroy');
+Route::post('projects/{project}/archive', [ProjectArchiveController::class, 'store'])->can('archive', 'project')->name('projects.archive');
+Route::delete('projects/{project}/archive', [ProjectArchiveController::class, 'destroy'])->can('archive', 'project')->name('projects.unarchive');
 
 Route::scopeBindings()->group(function () {
     Route::post('projects/{project}/milestones', [MilestoneController::class, 'store'])->can('update', 'project')->name('projects.milestones.store');

@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import Heading from '@/components/Heading.vue';
 import MemberAvatar from '@/components/MemberAvatar.vue';
 import CreateProjectDialog from '@/components/projects/CreateProjectDialog.vue';
+import StatusFilter from '@/components/projects/StatusFilter.vue';
 import type { ProjectFormOptions } from '@/components/projects/ProjectFields.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { Button } from '@/components/ui/button';
@@ -20,11 +21,15 @@ type ProjectSummary = {
     owner: { id: number; name: string };
     ends_on: string | null;
     members_count: number;
+    archived_at: string | null;
 };
 
 defineProps<{
     projects: ProjectSummary[];
     can: { create: boolean };
+    statuses: (Status & { count: number })[];
+    counts: { all: number; archived: number };
+    filter: number | 'archived' | null;
     projectForm?: Omit<ProjectFormOptions, 'values'> & {
         defaults: ProjectFormOptions['values'];
     };
@@ -60,6 +65,8 @@ const formatDate = (date: string) =>
             >
         </div>
 
+        <StatusFilter :statuses="statuses" :counts="counts" :current="filter" />
+
         <CreateProjectDialog
             v-if="can.create"
             v-model:open="creating"
@@ -89,6 +96,11 @@ const formatDate = (date: string) =>
                         >{{ project.name[0] }}</span
                     >
                     <StatusBadge :status="project.status" />
+                    <span
+                        v-if="project.archived_at"
+                        class="rounded-full bg-sunk px-2 py-1 text-[11px] font-semibold text-muted-foreground"
+                        >Archivé</span
+                    >
                 </div>
                 <div class="space-y-1">
                     <h3 class="text-[17px]">{{ project.name }}</h3>

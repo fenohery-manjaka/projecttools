@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Core\Actions\RecordActivity;
 use App\Modules\Projects\Actions\CreateProject;
+use App\Modules\Projects\Http\Requests\ProjectFilterRequest;
 use App\Modules\Projects\Http\Requests\ProjectRequest;
 use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
@@ -14,19 +15,31 @@ use App\Modules\Tasks\Models\Task;
 use App\Modules\Tasks\Support\TaskFormOptions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProjectController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(ProjectFilterRequest $request): Response
     {
         /** @var User $user */
         $user = $request->user();
 
+        $filter = $request->validated('status');
+        $countRows = Project::query()
+            ->visibleTo($user)
+            ->selectRaw('status_id, (archived_at is not null) as is_archived, count(*) as total')
+            ->groupBy('status_id', DB::raw('archived_at is not null'))
+            ->get();
+        $archivedCount = $countRows->where('is_archived', 1)->sum('total');
+        $activeCounts = $countRows->where('is_archived', 0)->pluck('total', 'status_id');
+
         $projects = Project::query()
             ->visibleTo($user)
-            ->whereNull('archived_at')
+            ->when($filter === 'archived', fn ($query) => $query->whereNotNull('archived_at'))
+            ->when($filter !== 'archived', fn ($query) => $query->whereNull('archived_at'))
+            ->when($filter !== null && $filter !== 'archived', fn ($query) => $query->where('status_id', (int) $filter))
             ->with(['owner:id,name', 'status'])
             ->withCount('members')
             ->latest()
@@ -36,7 +49,17 @@ class ProjectController extends Controller
             'projects' => $projects->map(fn (Project $project): array => [
                 ...$this->summary($project),
                 'members_count' => $project->members_count,
+                'archived_at' => $project->archived_at?->toIso8601String(),
             ]),
+            'statuses' => ProjectStatus::query()->ordered()->get()->map(fn (ProjectStatus $status): array => [
+                ...$status->toSummary(),
+                'count' => (int) ($activeCounts[$status->id] ?? 0),
+            ]),
+            'counts' => [
+                'all' => (int) $activeCounts->sum(),
+                'archived' => (int) $archivedCount,
+            ],
+            'filter' => $filter === null || $filter === 'archived' ? $filter : (int) $filter,
             'can' => ['create' => $user->can('create', Project::class)],
             // Loaded when the "New project" dialog opens (docs/conventions.md, « Créer dans une modale »).
             'projectForm' => Inertia::optional(fn (): array => [
@@ -70,6 +93,7 @@ class ProjectController extends Controller
         return Inertia::render('projects/Show', [
             'project' => [
                 ...$this->summary($project),
+                'archived_at' => $project->archived_at?->toIso8601String(),
                 'objectives' => $project->objectives,
                 'starts_on' => $project->starts_on?->toDateString(),
                 'members' => $project->members->map(fn (User $member): array => [
@@ -95,6 +119,7 @@ class ProjectController extends Controller
                 : [],
             'can' => [
                 'update' => $user->can('update', $project),
+                'archive' => $user->can('archive', $project),
                 'delete' => $user->can('delete', $project),
                 'manageMembers' => $canManageMembers,
                 'createTask' => $user->can('create', [Task::class, $project]),

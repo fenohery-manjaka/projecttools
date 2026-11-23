@@ -23,17 +23,23 @@ class TaskPolicy
 
     public function create(User $user, Project $project): bool
     {
-        return $user->checkPermissionTo('tasks.create') && $user->can('view', $project);
+        return $project->archived_at === null
+            && $user->checkPermissionTo('tasks.create')
+            && $user->can('view', $project);
     }
 
     public function update(User $user, Task $task): bool
     {
-        return $user->checkPermissionTo('tasks.update') && $user->can('view', $task->project);
+        return $task->project->archived_at === null
+            && $user->checkPermissionTo('tasks.update')
+            && $user->can('view', $task->project);
     }
 
     public function delete(User $user, Task $task): bool
     {
-        return $user->checkPermissionTo('tasks.delete') && $user->can('view', $task->project);
+        return $task->project->archived_at === null
+            && $user->checkPermissionTo('tasks.delete')
+            && $user->can('view', $task->project);
     }
 
     public function comment(User $user, Task $task): bool
