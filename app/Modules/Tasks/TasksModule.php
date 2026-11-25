@@ -8,10 +8,16 @@ use App\Modules\Core\Agenda\AgendaItemType;
 use App\Modules\Core\Agenda\AttentionItem;
 use App\Modules\Core\Agenda\Severity;
 use App\Modules\Core\Module;
+<<<<<<< HEAD
 use App\Modules\Tasks\Enums\TaskStatusCategory;
 use App\Modules\Tasks\Models\Task;
 use App\Modules\Tasks\Models\TaskStatus;
 use Carbon\CarbonImmutable;
+=======
+use App\Modules\Core\Navigation\NavigationGroup;
+use App\Modules\Core\Navigation\NavigationItem;
+use App\Modules\Tasks\Models\Task;
+>>>>>>> 1262d364762aee46cda10c0c526e9a58395f4ee8
 
 class TasksModule extends Module
 {
@@ -51,6 +57,7 @@ class TasksModule extends Module
         ];
     }
 
+<<<<<<< HEAD
     /**
      * @return list<AgendaItem>
      */
@@ -113,5 +120,29 @@ class TasksModule extends Module
             })
             ->values()
             ->all());
+=======
+    public function navigation(): array
+    {
+        return [
+            new NavigationItem(
+                title: 'Mes tâches',
+                route: 'tasks.mine',
+                icon: 'CircleCheck',
+                group: NavigationGroup::Work,
+                ability: 'viewAny',
+                abilityArguments: [Task::class],
+                order: 15,
+            ),
+            new NavigationItem(
+                title: 'Tâches',
+                route: 'tasks.index',
+                icon: 'ListChecks',
+                group: NavigationGroup::Work,
+                ability: 'viewAny',
+                abilityArguments: [Task::class],
+                order: 30,
+            ),
+        ];
+>>>>>>> 1262d364762aee46cda10c0c526e9a58395f4ee8
     }
 }

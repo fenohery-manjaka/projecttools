@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -112,6 +113,25 @@ class Task extends Model implements Commentable
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * @return HasMany<Subtask, $this>
+     */
+    public function subtasks(): HasMany
+    {
+        return $this->hasMany(Subtask::class)->orderBy('position')->orderBy('id');
+    }
+
+    /**
+     * Adds subtasks_count and done_subtasks_count (shown as "2/5" on cards and rows).
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function withSubtaskCounts(Builder $query): void
+    {
+        $query->withCount(['subtasks', 'subtasks as done_subtasks_count' => fn (Builder $subtasks) => $subtasks->whereNotNull('done_at')]);
     }
 
     public function isDone(): bool
