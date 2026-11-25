@@ -2,7 +2,11 @@
 
 namespace App\Modules\Core;
 
+use App\Models\User;
+use App\Modules\Core\Agenda\AgendaItem;
+use App\Modules\Core\Agenda\AttentionItem;
 use App\Modules\Core\Navigation\NavigationItem;
+use Carbon\CarbonImmutable;
 use ReflectionClass;
 
 /**
@@ -62,6 +66,22 @@ abstract class Module
      * @return list<NavigationItem>
      */
     public function navigation(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return list<AgendaItem>
+     */
+    public function agenda(User $user, CarbonImmutable $from, CarbonImmutable $to): array
+    {
+        return [];
+    }
+
+    /**
+     * @return list<AttentionItem>
+     */
+    public function attention(User $user): array
     {
         return [];
     }

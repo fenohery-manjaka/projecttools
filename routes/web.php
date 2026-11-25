@@ -1,11 +1,12 @@
 <?php
 
+use App\Modules\Core\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('dashboard', HomeController::class)->name('dashboard');
 });
 
 require __DIR__.'/settings.php';

@@ -3,8 +3,12 @@
 namespace App\Modules\Core;
 
 use App\Models\User;
+use App\Modules\Core\Agenda\AgendaItem;
+use App\Modules\Core\Agenda\AttentionItem;
 use App\Modules\Core\Models\ModuleState;
 use App\Modules\Core\Navigation\NavigationItem;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use InvalidArgumentException;
 
@@ -164,6 +168,28 @@ class ModuleRegistry
         usort($items, fn (NavigationItem $a, NavigationItem $b): int => $a->order <=> $b->order);
 
         return $items;
+    }
+
+    /**
+     * @return Collection<int, AgendaItem>
+     */
+    public function agendaFor(User $user, CarbonImmutable $from, CarbonImmutable $to): Collection
+    {
+        return collect($this->enabled())
+            ->flatMap(fn (Module $module): array => $module->agenda($user, $from, $to))
+            ->sortBy(fn (AgendaItem $item): string => $item->date.' '.($item->time ?? '00:00'))
+            ->values();
+    }
+
+    /**
+     * @return Collection<int, AttentionItem>
+     */
+    public function attentionFor(User $user): Collection
+    {
+        return collect($this->enabled())
+            ->flatMap(fn (Module $module): array => $module->attention($user))
+            ->sortBy(fn (AttentionItem $item): string => $item->severity->order().'-'.($item->date ?? '9999-12-31'))
+            ->values();
     }
 
     public function flushStates(): void

@@ -6,6 +6,7 @@
 */
 
 use App\Modules\Tasks\Http\Controllers\CommentController;
+use App\Modules\Tasks\Http\Controllers\MyTasksController;
 use App\Modules\Tasks\Http\Controllers\Settings\TaskStatusController as TaskStatusSettingsController;
 use App\Modules\Tasks\Http\Controllers\TaskController;
 use App\Modules\Tasks\Http\Controllers\TaskStatusController;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 // No "tasks/create" page: tasks are created in a dialog (docs/conventions.md).
 // The project comes from the request, so TaskRequest checks "create" on it.
+Route::get('my-tasks', MyTasksController::class)->can('viewAny', Task::class)->name('tasks.mine');
 Route::post('tasks', [TaskController::class, 'store'])->can('viewAny', Task::class)->name('tasks.store');
 Route::post('tasks/{task}/comments', [CommentController::class, 'store'])->can('comment', 'task')->name('tasks.comments.store');
 Route::get('tasks/{task}', [TaskController::class, 'show'])->can('view', 'task')->whereNumber('task')->name('tasks.show');
